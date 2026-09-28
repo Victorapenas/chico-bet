@@ -3,7 +3,7 @@
 Plataforma interativa para automatizar o sorteio e equilibrar equipes de futebol amador." Isso resume o objetivo principal do sistema.
 
 # Estrutura do projeto:
-
+```
 chico-bet/
 │
 ├── index.html              # Tela Inicial (Dashboard)
@@ -22,3 +22,4 @@ chico-bet/
 └── assets/
     ├── img/                # Fotos dos jogadores e logo do sistema
     └── icons/              # Ícones (como as setinhas dos menus)
+```
