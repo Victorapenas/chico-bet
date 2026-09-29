@@ -1,0 +1,1586 @@
+/*
+===================================================================
+PROJETO CHICO B.E.T - SISTEMA DE GERENCIAMENTO DE BABA (IFBA EUNÁPOLIS)
+ESTILIZAÇÃO CSS3 MODERNA & ARQUITETURA DE DESIGN
+Desenvolvido por: Kauan Bento (Responsável pelo Design & CSS)
+===================================================================
+*/
+
+/* 1. VARIÁVEIS DE DESIGN SYSTEM & PALETA DE CORES */
+:root {
+    --bg-main: #0B0F19;
+    --bg-card: #131B2E;
+    --bg-card-hover: #1A243D;
+    --bg-header: rgba(11, 15, 25, 0.85);
+    --border-color: rgba(255, 255, 255, 0.08);
+    
+    /* Cores de Destaque */
+    --accent-gold: #F59E0B;
+    --accent-gold-glow: rgba(245, 158, 11, 0.4);
+    --accent-green: #10B981;
+    --accent-green-glow: rgba(16, 185, 129, 0.3);
+    --accent-blue: #3B82F6;
+    --accent-purple: #8B5CF6;
+    --accent-crimson: #EF4444;
+    
+    /* Cartas FUT Colors */
+    --fut-gold-bg: linear-gradient(135deg, #1f1b0a 0%, #3a3111 35%, #594a15 70%, #292209 100%);
+    --fut-gold-border: linear-gradient(135deg, #FFE082 0%, #F59E0B 50%, #B45309 100%);
+    --fut-special-border: linear-gradient(135deg, #10B981 0%, #3B82F6 50%, #8B5CF6 100%);
+    
+    /* Tipografia */
+    --font-heading: 'Outfit', -apple-system, sans-serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    
+    /* Utilitários */
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-full: 9999px;
+    --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 25px rgba(245, 158, 11, 0.25);
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 2. RESET E ESTILOS GERAIS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-main);
+    color: #F3F4F6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+/* Scrollbar estilizada */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+    background: #2D3748;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-gold);
+}
+
+/* 3. CABEÇALHO (Kauan Bento) */
+.main-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-header);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.brand-badge {
+    width: 46px;
+    height: 46px;
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: #000;
+    box-shadow: var(--shadow-glow);
+    animation: floatBadge 3s ease-in-out infinite;
+}
+
+@keyframes floatBadge {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.brand-text h1 {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #FFFFFF, var(--accent-gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.brand-text .subtitle {
+    font-size: 0.78rem;
+    color: #9CA3AF;
+    font-weight: 500;
+}
+
+/* Navegação Principal */
+.main-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 0.5rem;
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: #9CA3AF;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-btn:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-btn.active {
+    color: #FFFFFF;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.nav-btn.highlight {
+    background: linear-gradient(135deg, var(--accent-gold), #D97706);
+    color: #000000;
+    font-weight: 700;
+}
+
+.nav-btn.highlight:hover {
+    box-shadow: 0 0 20px var(--accent-gold-glow);
+    transform: translateY(-2px);
+}
+
+/* 4. LAYOUT PRINCIPAL E ASIDE */
+.main-content {
+    flex: 1;
+    padding: 2rem 1.5rem;
+}
+
+.layout-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+}
+
+/* SEÇÕES DINÂMICAS */
+.app-section {
+    display: none;
+    animation: fadeIn 0.35s ease;
+}
+
+.app-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* DASHBOARD BANNER */
+.welcome-banner {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 2rem;
+    align-items: center;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-banner::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, var(--accent-gold-glow) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.tag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.8rem;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: var(--accent-gold);
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.banner-info h2 {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin-bottom: 0.8rem;
+    line-height: 1.2;
+}
+
+.banner-info h2 span {
+    color: var(--accent-gold);
+}
+
+.banner-info p {
+    color: #9CA3AF;
+    font-size: 1rem;
+    margin-bottom: 1.8rem;
+    max-width: 600px;
+}
+
+.banner-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+/* BOTÕES GERAIS */
+.btn {
+    font-family: var(--font-body);
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-gold), #D97706);
+    color: #000;
+}
+.btn-primary:hover {
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: #FFF;
+    border: 1px solid var(--border-color);
+}
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-outline {
+    background: transparent;
+    color: #FFF;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.btn-outline:hover {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+}
+
+.btn-gold {
+    background: linear-gradient(135deg, #F59E0B, #FBBF24);
+    color: #000;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+}
+
+.btn-whatsapp {
+    background: #25D366;
+    color: #000;
+    font-weight: 700;
+}
+.btn-whatsapp:hover {
+    background: #20BA5A;
+    box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+}
+
+.btn-xl {
+    padding: 1.1rem 2.2rem;
+    font-size: 1.1rem;
+    border-radius: var(--radius-lg);
+}
+
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.82rem;
+}
+
+.glow-animation {
+    animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
+    70% { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+
+/* ESTATÍSTICAS GRID */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.2rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    transition: var(--transition);
+}
+
+.stat-box:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.icon-blue { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+.icon-gold { background: rgba(245, 158, 11, 0.15); color: var(--accent-gold); }
+.icon-green { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+.icon-purple { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); }
+
+.stat-data {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #9CA3AF;
+}
+
+/* DESTAQUES DA DASHBOARD */
+.dashboard-highlights {
+    margin-top: 2rem;
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+}
+
+.section-title h3 {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.btn-link {
+    background: transparent;
+    border: none;
+    color: var(--accent-gold);
+    font-family: var(--font-body);
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.featured-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+/* 5. ESTRUTURA DAS CARTAS FUT (DESIGN PREMIUM KAUAN BENTO) */
+.fut-card {
+    position: relative;
+    width: 220px;
+    height: 330px;
+    background: var(--fut-gold-bg);
+    border-radius: 16px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    color: #FFE082;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    border: 2px solid #F59E0B;
+    overflow: hidden;
+    user-select: none;
+    transition: var(--transition);
+}
+
+.fut-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,224,130,0.2) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.fut-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(245, 158, 11, 0.35);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    z-index: 2;
+}
+
+.card-ratings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+}
+
+.card-ovr {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 900;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    color: #FFF;
+}
+
+.card-pos {
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #F59E0B;
+}
+
+.card-badge-top {
+    font-size: 1.1rem;
+    color: #F59E0B;
+    opacity: 0.8;
+}
+
+.card-photo-box {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    margin: -10px auto 4px auto;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    border: 2px solid rgba(245, 158, 11, 0.5);
+    background: #000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.card-photo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-info {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.card-name {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #FFF;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-nickname {
+    font-size: 0.75rem;
+    color: #FBBF24;
+    font-weight: 600;
+}
+
+.card-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.5), transparent);
+    margin: 6px 0;
+}
+
+/* SKILLS E ATRIBUTOS DA CARTA */
+.card-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0 6px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.stat-val {
+    color: #FFF;
+    font-weight: 800;
+}
+
+.card-skill-badge {
+    margin-top: 6px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px dashed rgba(245, 158, 11, 0.6);
+    border-radius: var(--radius-sm);
+    padding: 3px 6px;
+    font-size: 0.68rem;
+    text-align: center;
+    color: #FDE047;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* BOTÕES DE AÇÃO NA CARTA */
+.card-overlay-actions {
+    position: absolute;
+    inset: 0;
+    background: rgba(11, 15, 25, 0.85);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    opacity: 0;
+    transition: var(--transition);
+    z-index: 10;
+}
+
+.fut-card:hover .card-overlay-actions {
+    opacity: 1;
+}
+
+.card-action-btn {
+    width: 80%;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    border: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+/* 6. TELA DE ELENCO & FILTROS */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.8rem;
+}
+
+.header-title h2 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.header-title p {
+    color: #9CA3AF;
+    font-size: 0.9rem;
+}
+
+.filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    background: var(--bg-card);
+    padding: 0.8rem 1.2rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    max-width: 380px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9CA3AF;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.65rem 1rem 0.65rem 2.5rem;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: #FFF;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    outline: none;
+}
+.search-box input:focus {
+    border-color: var(--accent-gold);
+}
+
+.filter-pills {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.pill-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: #9CA3AF;
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.pill-btn:hover {
+    color: #FFF;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.pill-btn.active {
+    background: var(--accent-gold);
+    color: #000;
+    border-color: var(--accent-gold);
+    font-weight: 700;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2rem;
+    justify-items: center;
+}
+
+/* 7. TELA DE FORMULÁRIO DE CADASTRO */
+.form-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+}
+
+.card-preview-live-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.card-preview-live-box h4 {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    color: #9CA3AF;
+}
+
+.form-fieldset {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-fieldset legend {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--accent-gold);
+    padding: 0 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.fieldset-desc {
+    font-size: 0.82rem;
+    color: #9CA3AF;
+    margin-bottom: 1.2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #E5E7EB;
+}
+
+.form-group input,
+.form-group select {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 0.65rem 0.9rem;
+    color: #FFF;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--accent-gold);
+}
+
+.form-row.duo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.avatar-selection-row {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.avatar-selection-row input {
+    flex: 1;
+}
+
+/* SLIDERS DE ATRIBUTOS */
+.sliders-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+}
+
+.slider-group {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.8rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    margin-bottom: 0.4rem;
+}
+
+.slider-header strong {
+    color: var(--accent-gold);
+    font-size: 0.95rem;
+}
+
+input[type=range] {
+    width: 100%;
+    accent-color: var(--accent-gold);
+    cursor: pointer;
+}
+
+.overall-live-box {
+    grid-column: span 2;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(0, 0, 0, 0.4));
+    border: 1px solid var(--accent-gold);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.overall-live-box span {
+    font-weight: 700;
+    color: #FFF;
+}
+
+.overall-live-box strong {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--accent-gold);
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* 8. TELA DE SETUP E SORTEIO DO BABA (RF03) */
+.sorteio-config-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.config-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.config-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.config-item label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+}
+
+.config-item select {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: #FFF;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+}
+
+.counter-item {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-md);
+    align-items: center;
+}
+
+.counter-item span { font-size: 0.8rem; color: #A7F3D0; }
+.counter-item strong { font-family: var(--font-heading); font-size: 1.3rem; color: var(--accent-green); }
+
+.presence-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+}
+
+.presence-container h3 {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+    color: #FFF;
+}
+
+.presence-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.8rem;
+}
+
+.presence-checkbox-card {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.8rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.presence-checkbox-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.presence-checkbox-card.checked {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: var(--accent-gold);
+}
+
+.presence-checkbox-card input[type=checkbox] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-gold);
+    cursor: pointer;
+}
+
+.presence-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    border: 1px solid var(--border-color);
+}
+
+.presence-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.presence-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #FFF;
+}
+
+.presence-sub {
+    font-size: 0.75rem;
+    color: #9CA3AF;
+}
+
+.sortear-trigger-box {
+    text-align: center;
+    margin: 2.5rem 0;
+}
+
+/* RESULTADOS DO SORTEIO */
+.result-draw-area {
+    background: var(--bg-card);
+    border: 2px solid var(--accent-gold);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin-top: 2rem;
+    animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.results-header h3 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--accent-gold);
+}
+
+.result-tools {
+    display: flex;
+    gap: 0.8rem;
+}
+
+/* UPLOAD DE FOTO DE ATLETA */
+.photo-upload-container {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.4rem;
+}
+
+.file-status {
+    font-size: 0.82rem;
+    color: #9CA3AF;
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.results-subtitle {
+    font-size: 0.85rem;
+    color: #9CA3AF;
+    margin-top: 0.2rem;
+}
+
+.view-mode-toggle {
+    display: flex;
+    gap: 0.4rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.2rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+}
+
+/* BARRA DE TABS DOS TIMES SORTEADOS */
+.team-tabs-bar {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.team-tab-btn {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid var(--border-color);
+    color: #9CA3AF;
+    padding: 0.65rem 1.3rem;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.team-tab-btn:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #FFF;
+}
+
+.team-tab-btn.active {
+    background: var(--bg-card);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.team-tab-btn.tag-a.active { border-color: #10B981; color: #10B981; }
+.team-tab-btn.tag-b.active { border-color: #3B82F6; color: #3B82F6; }
+.team-tab-btn.tag-c.active { border-color: #F59E0B; color: #F59E0B; }
+.team-tab-btn.tag-d.active { border-color: #EF4444; color: #EF4444; }
+.team-tab-btn.tag-e.active { border-color: #8B5CF6; color: #8B5CF6; }
+
+.tab-ovr-pill {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+/* CAMPO TÁTICO ESTILO TRANSMISSÃO DE TV */
+.broadcast-pitch {
+    min-height: 520px;
+    background: radial-gradient(circle, #15803D 0%, #064E3B 100%);
+    position: relative;
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), inset 0 0 80px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+}
+
+.pitch-texture {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 45px, transparent 45px, transparent 90px);
+    pointer-events: none;
+}
+
+.pitch-header-title {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(11, 15, 25, 0.85);
+    backdrop-filter: blur(8px);
+    padding: 0.5rem 1.4rem;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.pitch-tactical-nodes {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+}
+
+/* PINS DOS JOGADORES NO CAMPO 2D */
+.tactical-player-pin {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 6;
+}
+
+.tactical-player-pin:hover {
+    transform: translate(-50%, -50%) scale(1.18);
+    z-index: 30;
+}
+
+.pin-avatar-frame {
+    position: relative;
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-gold);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), 0 0 15px var(--accent-gold-glow);
+    background: #000;
+}
+
+.pin-avatar-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.pin-ovr-tag {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: var(--accent-gold);
+    color: #000;
+    font-family: var(--font-heading);
+    font-weight: 900;
+    font-size: 0.78rem;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #000;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+.pin-info-plate {
+    margin-top: 4px;
+    background: rgba(11, 15, 25, 0.9);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(245, 158, 11, 0.5);
+    border-radius: 6px;
+    padding: 2px 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+}
+
+.pin-name {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 0.8rem;
+    color: #FFF;
+    white-space: nowrap;
+}
+
+.pin-pos-badge {
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 1px 4px;
+    border-radius: 3px;
+}
+
+.pos-GOL { background: rgba(239, 68, 68, 0.3); color: #FCA5A5; }
+.pos-ZAG { background: rgba(59, 130, 246, 0.3); color: #93C5FD; }
+.pos-MEI { background: rgba(245, 158, 11, 0.3); color: #FDE047; }
+.pos-ATA { background: rgba(16, 185, 129, 0.3); color: #6EE7B7; }
+
+/* VISUALIZAÇÃO EM LISTAS LADO A LADO */
+.teams-pitch-overlay {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.team-column {
+    background: rgba(11, 15, 25, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: var(--radius-md);
+    padding: 1.2rem;
+    border: 1px solid var(--border-color);
+}
+
+.team-badge-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.badge-tag {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 0.9rem;
+}
+
+.tag-a { color: var(--accent-green); }
+.tag-b { color: var(--accent-blue); }
+.tag-c { color: #F59E0B; }
+.tag-d { color: #EF4444; }
+.tag-e { color: #8B5CF6; }
+.tag-reserve { color: var(--accent-gold); }
+
+.team-overall-badge {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--accent-gold);
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-weight: 800;
+    font-size: 0.85rem;
+}
+
+.pitch-players-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.pitch-player-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-sm);
+}
+
+.row-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--accent-gold);
+}
+
+.pitch-player-ovr {
+    font-family: var(--font-heading);
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--accent-gold);
+    width: 32px;
+}
+
+.pitch-player-name {
+    flex: 1;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.pitch-player-pos {
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.reserves-box {
+    margin-top: 1.8rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px dashed var(--accent-gold);
+    border-radius: var(--radius-md);
+    padding: 1.2rem;
+}
+
+.reserves-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+}
+
+.reserve-row {
+    background: rgba(245, 158, 11, 0.12) !important;
+    border: 1px dashed rgba(245, 158, 11, 0.4);
+}
+
+/* TABELA DE CONFRONTOS E ORDEM DOS JOGOS */
+.fixtures-box {
+    margin-top: 2rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+}
+
+.fixtures-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+}
+
+.fixtures-header h4 {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--accent-gold);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.fixtures-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.fixture-card {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.4rem;
+}
+
+.fixture-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #9CA3AF;
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.fixture-versus {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.fixture-team { color: #FFF; }
+
+.fixture-vs-badge {
+    background: var(--accent-gold);
+    color: #000;
+    padding: 0.2rem 0.7rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 900;
+}
+
+.fixture-waiting {
+    margin-top: 0.6rem;
+    font-size: 0.82rem;
+    color: #FBBF24;
+    background: rgba(245, 158, 11, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+}
+
+
+/* 9. ASIDE BARRA LATERAL (Kauan Bento) */
+.sidebar-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.aside-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.2rem;
+}
+
+.aside-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    color: var(--accent-gold);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.rules-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: #D1D5DB;
+}
+
+.rules-card i {
+    color: var(--accent-gold);
+    margin-right: 0.3rem;
+}
+
+.group-members {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: #9CA3AF;
+    margin-top: 0.8rem;
+}
+
+/* 10. RODAPÉ E MODAL */
+.main-footer {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    padding: 1.5rem;
+    margin-top: 3rem;
+    text-align: center;
+    color: #9CA3AF;
+    font-size: 0.85rem;
+}
+
+.credits-footer {
+    font-size: 0.78rem;
+    margin-top: 0.3rem;
+    color: #6B7280;
+}
+
+.hidden { display: none !important; }
+
+/* MODAL DE CARTA */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.25s ease;
+}
+
+.modal-content {
+    position: relative;
+    background: transparent;
+}
+
+.modal-close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+    border: none;
+    color: #000;
+    font-size: 1.5rem;
+    font-weight: 900;
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* 11. RESPONSIVIDADE (MOBILE & TABLET) */
+@media (max-width: 1024px) {
+    .layout-container {
+        grid-template-columns: 1fr;
+    }
+    .welcome-banner {
+        grid-template-columns: 1fr;
+    }
+    .banner-graphic {
+        display: none;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .main-nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .teams-pitch-overlay {
+        grid-template-columns: 1fr;
+    }
+    .vs-divider {
+        margin: 1rem auto;
+    }
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

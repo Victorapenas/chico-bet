@@ -1,0 +1,234 @@
+/* 2. RESET E ESTILOS GERAIS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-main);
+    color: #F3F4F6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+/* Scrollbar estilizada */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+    background: #2D3748;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-gold);
+}
+
+.hidden { display: none !important; }
+
+/* 3. CABEÇALHO (Kauan Bento) */
+.main-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-header);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.brand-badge {
+    width: 46px;
+    height: 46px;
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: #000;
+    box-shadow: var(--shadow-glow);
+    animation: floatBadge 3s ease-in-out infinite;
+}
+
+@keyframes floatBadge {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.brand-text h1 {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #FFFFFF, var(--accent-gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.brand-text .subtitle {
+    font-size: 0.78rem;
+    color: #9CA3AF;
+    font-weight: 500;
+}
+
+/* Navegação Principal */
+.main-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 0.5rem;
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: #9CA3AF;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-btn:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-btn.active {
+    color: #FFFFFF;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.nav-btn.highlight {
+    background: linear-gradient(135deg, var(--accent-gold), #D97706);
+    color: #000000;
+    font-weight: 700;
+}
+
+.nav-btn.highlight:hover {
+    box-shadow: 0 0 20px var(--accent-gold-glow);
+    transform: translateY(-2px);
+}
+
+/* 4. LAYOUT PRINCIPAL E ASIDE */
+.main-content {
+    flex: 1;
+    padding: 2rem 1.5rem;
+}
+
+.layout-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+}
+
+/* SEÇÕES DINÂMICAS */
+.app-section {
+    display: none;
+    animation: fadeIn 0.35s ease;
+}
+
+.app-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 9. ASIDE BARRA LATERAL (Kauan Bento) */
+.sidebar-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.aside-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.2rem;
+}
+
+.aside-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    color: var(--accent-gold);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.rules-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: #D1D5DB;
+}
+
+.rules-card i {
+    color: var(--accent-gold);
+    margin-right: 0.3rem;
+}
+
+.group-members {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: #9CA3AF;
+    margin-top: 0.8rem;
+}
+
+/* 10. RODAPÉ */
+.main-footer {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    padding: 1.5rem;
+    margin-top: 3rem;
+    text-align: center;
+    color: #9CA3AF;
+    font-size: 0.85rem;
+}
+
+.credits-footer {
+    font-size: 0.78rem;
+    margin-top: 0.3rem;
+    color: #6B7280;
+}
