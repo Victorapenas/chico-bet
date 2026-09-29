@@ -36,7 +36,11 @@ chico-bet/
 ```
 
 ## 👥 Divisão da Equipe e Papéis (Resenha FC):
-- **Francisco António:** Responsável pela **Estrutura e HTML Semântico**. Garantiu que a fundação (o famoso "esqueleto" da aplicação) estivesse acessível, organizada e preparada para virar uma Single Page Application.
-- **Kauan Bento:** O mago da **Estilização & UI/UX (CSS Modular)**. Trouxe o design premium, animações e a arquitetura de tokens visuais que faz o sistema parecer um jogo de videogame profissional.
-- **Paulo Amaral:** Arquiteto da **Lógica de Negócio & Algoritmos (JavaScript)**. Desenvolveu toda a lógica modularizada, manipulando dados locais e garantindo que o algoritmo de balanceamento do Sorteio não deixe ninguém roubar no "Overall".
-- **Victor Hugo Santana e Yan Lacerda:** Mestres da **Documentação, Elenco, UX Writing e Testes**. Garantiram a alma do "baba" com a resenha, validaram as funcionalidades para não bugar na hora da pelada, e documentaram o projeto (como você está lendo agora).
+
+Como em todo bom time de várzea, aqui **todo mundo correu dobrado e fez a sua parte**, se ajudando no projeto inteiro. O foco principal de cada um foi:
+
+- **Paulo Amaral:** Arquiteto da Lógica de Negócio e Algoritmos (JavaScript). Focou no coração do sistema para o sorteio funcionar redondinho.
+- **Victor Hugo (Você):** Mestre da Estrutura HTML e colaboração fortíssima na Lógica JavaScript junto com o Paulo.
+- **Kauan Bento:** O mago da Estilização, Design & UI/UX (CSS Modular), atuando junto com o Francisco para deixar tudo com cara de FIFA.
+- **Francisco António:** Responsável pela Estilização (CSS) junto com o Bento e pela Documentação do projeto.
+- **Yan Lacerda:** Trabalhou na Estrutura (HTML) junto com o Victor e cuidou da Documentação.
