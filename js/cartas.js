@@ -1,134 +1,121 @@
 /**
- * cartas.js - Renderização do Catálogo de Atletas por Estrelas
- * Chico B.E.T - IFBA Eunápolis
+ * cartas.js — Renderização das cartas estilo EA Sports FC / FUTBIN
+ *
+ * Cada carta exibe:
+ * - OVR e Posição no canto superior esquerdo
+ * - Foto recortada (ou placeholder neutro com iniciais)
+ * - Nome do atleta em caixa alta
+ * - 6 atributos oficiais PT-BR: RIT, FIN, PAS, DRI, DEF, FIS
+ * - Badges de Nacionalidade (Bandeira do Brasil ou Angola), Cidade de Origem e Escudo IFBA
+ * - Barra meta no rodapé com Perna dominante e OVR
  */
 
-let filtroPosicaoAtual = 'TODOS';
-let termoBuscaAtual = '';
+var filtroPosicao = "TODOS";
+var filtroBusca = "";
 
-// Inicialização dos eventos do catálogo de cartas
-function inicializarCartas() {
-  // Filtros por botões (chips)
-  const botoesFiltro = document.querySelectorAll('.chip-btn');
-  botoesFiltro.forEach(btn => {
-    btn.addEventListener('click', () => {
-      botoesFiltro.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      filtroPosicaoAtual = btn.getAttribute('data-pos') || 'TODOS';
-      renderizarCatalogoCartas();
-    });
-  });
-
-  // Campo de busca por texto
-  const campoBusca = document.getElementById('search-player-input');
-  if (campoBusca) {
-    campoBusca.addEventListener('input', (e) => {
-      termoBuscaAtual = e.target.value.toLowerCase().trim();
-      renderizarCatalogoCartas();
+function iniciarCartas() {
+  // Filtros por posição
+  var pills = document.querySelectorAll(".filter-pill");
+  for (var i = 0; i < pills.length; i++) {
+    pills[i].addEventListener("click", function(e) {
+      for (var j = 0; j < pills.length; j++) pills[j].classList.remove("active");
+      e.target.classList.add("active");
+      filtroPosicao = e.target.getAttribute("data-pos") || "TODOS";
+      renderizarCartas();
     });
   }
 
-  renderizarCatalogoCartas();
+  // Campo de busca
+  var input = document.getElementById("busca-jogador");
+  if (input) {
+    input.addEventListener("input", function() {
+      filtroBusca = input.value.toLowerCase().trim();
+      renderizarCartas();
+    });
+  }
+
+  renderizarCartas();
 }
 
-// Renderiza a lista de cartas dos jogadores na tela
-function renderizarCatalogoCartas() {
-  const container = document.getElementById('cards-grid-container');
-  if (!container) return;
+function renderizarCartas() {
+  var grid = document.getElementById("grid-cartas");
+  if (!grid) return;
 
-  const jogadores = obterJogadores();
+  var jogadores = carregarJogadores();
 
-  // Filtra por posição e busca de texto
-  const filtrados = jogadores.filter(j => {
-    const atendePosicao = (filtroPosicaoAtual === 'TODOS') || (j.posicao === filtroPosicaoAtual);
-    const atendeNome = termoBuscaAtual === '' || 
-      j.nome.toLowerCase().includes(termoBuscaAtual) || 
-      (j.apelido && j.apelido.toLowerCase().includes(termoBuscaAtual));
-    return atendePosicao && atendeNome;
+  // Filtragem
+  var lista = jogadores.filter(function(j) {
+    var okPos = filtroPosicao === "TODOS" || j.posicao === filtroPosicao;
+    var okNome = filtroBusca === "" ||
+      j.nome.toLowerCase().indexOf(filtroBusca) !== -1 ||
+      (j.apelido && j.apelido.toLowerCase().indexOf(filtroBusca) !== -1);
+    return okPos && okNome;
   });
 
-  if (filtrados.length === 0) {
-    container.innerHTML = `
-      <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
-        <p style="font-size: 2rem;">⚽</p>
-        <p>Nenhum atleta encontrado com esses filtros.</p>
-      </div>
-    `;
+  if (lista.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><h4>Nenhum jogador encontrado</h4><p>Altere os filtros ou cadastre um novo atleta.</p></div>';
     return;
   }
 
-  container.innerHTML = filtrados.map(j => {
-    const fotoSrc = obterFotoJogador(j.foto);
-    const estrelasHtml = renderizarEstrelasVisual(j.estrelas);
-
-    return `
-      <div class="player-card ${j.estrelas >= 4.0 ? 'tier-destaque' : ''}">
-        <!-- Cabeçalho com Estrelas e Posição -->
-        <div class="card-header-stars">
-          <div class="stars-rating-badge">
-            <span>⭐</span>
-            <span>${j.estrelas.toFixed(1)}</span>
-          </div>
-          <span class="pos-tag pos-${j.posicao}">${j.posicao}</span>
-        </div>
-
-        <!-- Foto Real ou Silhueta Neutra -->
-        <div class="card-photo-wrapper">
-          <img src="${fotoSrc}" alt="${j.nome}" loading="lazy">
-        </div>
-
-        <!-- Nome e Apelido -->
-        <div class="card-name-section">
-          <div class="card-nickname">${j.apelido || j.nome}</div>
-          <div class="card-realname">${j.nome} • Perna: ${j.perna || 'Destro'}</div>
-        </div>
-
-        <!-- As 6 Skills da Pelada (1 a 5) -->
-        <div class="skills-grid">
-          <div class="skill-row">
-            <span class="skill-lbl">⚡ Velocidade</span>
-            <span class="skill-num">${(j.skills.vel || 3).toFixed(1)}</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-lbl">🎯 Finalização</span>
-            <span class="skill-num">${(j.skills.chu || 3).toFixed(1)}</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-lbl">👟 Passe</span>
-            <span class="skill-num">${(j.skills.pas || 3).toFixed(1)}</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-lbl">🌀 Drible</span>
-            <span class="skill-num">${(j.skills.dri || 3).toFixed(1)}</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-lbl">🛡️ Marcação</span>
-            <span class="skill-num">${(j.skills.def || 3).toFixed(1)}</span>
-          </div>
-          <div class="skill-row">
-            <span class="skill-lbl">💪 Força</span>
-            <span class="skill-num">${(j.skills.fis || 3).toFixed(1)}</span>
-          </div>
-        </div>
-
-        <!-- Botões de Ação -->
-        <div class="card-actions-bar">
-          <button class="card-action-btn" onclick="abrirEdicaoJogador('${j.id}')">✏️ Editar</button>
-          <button class="card-action-btn del" onclick="removerJogador('${j.id}')">🗑️ Excluir</button>
-        </div>
-      </div>
-    `;
-  }).join('');
+  var html = "";
+  for (var i = 0; i < lista.length; i++) {
+    html += montarCartaHTML(lista[i]);
+  }
+  grid.innerHTML = html;
 }
 
-// Remover jogador
-function removerJogador(id) {
-  if (confirm("Deseja remover este atleta do baba?")) {
-    let lista = obterJogadores();
-    lista = lista.filter(j => j.id !== id);
-    salvarJogadores(lista);
-    renderizarCatalogoCartas();
-    atualizarDashboard();
-    mostrarNotificacao("Atleta removido com sucesso!");
-  }
+function montarCartaHTML(j) {
+  var tier = tierDaCarta(j.ovr);
+  var temFoto = j.foto && j.foto.trim() !== "";
+  var s = j.stats;
+
+  var bandeira = htmlBandeira(j.bandeira);
+  var escudo = htmlEscudoTime(j.time);
+  var origem = j.origem || "Eunápolis";
+  var pernaLabel = j.perna === "L" ? "L" : (j.perna === "LR" ? "LR" : "R");
+
+  return '<div class="fut-card ' + tier + '">' +
+    '<div class="card-actions">' +
+      '<button class="card-act-btn" onclick="editarJogador(\'' + j.id + '\')" title="Editar">&#9998;</button>' +
+      '<button class="card-act-btn act-del" onclick="excluirJogador(\'' + j.id + '\')" title="Excluir">&times;</button>' +
+    '</div>' +
+    '<div class="card-rating">' +
+      '<div class="card-ovr">' + j.ovr + '</div>' +
+      '<div class="card-pos">' + j.posicao + '</div>' +
+    '</div>' +
+    '<div class="card-photo' + (temFoto ? '' : ' no-photo') + '"' +
+      (temFoto ? '' : ' data-initials="' + iniciais(j.nome) + '"') + '>' +
+      (temFoto ? '<img src="' + j.foto + '" alt="' + j.nome + '" loading="lazy">' : '') +
+    '</div>' +
+    '<div class="card-name">' +
+      '<div class="card-player-name">' + (j.apelido || j.nome) + '</div>' +
+    '</div>' +
+    '<div class="card-stats">' +
+      '<div class="stat-item"><span class="stat-num">' + s.rit + '</span><span class="stat-abbr">RIT</span></div>' +
+      '<div class="stat-item"><span class="stat-num">' + s.dri + '</span><span class="stat-abbr">DRI</span></div>' +
+      '<div class="stat-item"><span class="stat-num">' + s.fin + '</span><span class="stat-abbr">FIN</span></div>' +
+      '<div class="stat-item"><span class="stat-num">' + s.def + '</span><span class="stat-abbr">DEF</span></div>' +
+      '<div class="stat-item"><span class="stat-num">' + s.pas + '</span><span class="stat-abbr">PAS</span></div>' +
+      '<div class="stat-item"><span class="stat-num">' + s.fis + '</span><span class="stat-abbr">FIS</span></div>' +
+    '</div>' +
+    '<div class="card-badges-row">' +
+      bandeira +
+      '<span class="card-origin-tag" title="Origem: ' + origem + '">' + origem + '</span>' +
+      escudo +
+    '</div>' +
+    '<div class="card-meta-pill">' +
+      '<span class="meta-foot">' + pernaLabel + '</span>' +
+      '<span>4★</span>' +
+      '<span class="meta-ovr-tag">' + j.ovr + '</span>' +
+    '</div>' +
+  '</div>';
+}
+
+function excluirJogador(id) {
+  if (!confirm("Remover este atleta do elenco?")) return;
+  var lista = carregarJogadores().filter(function(j) { return j.id !== id; });
+  guardarJogadores(lista);
+  renderizarCartas();
+  atualizarDashboard();
+  notify("Atleta removido do elenco.");
 }

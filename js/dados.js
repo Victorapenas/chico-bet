@@ -1,147 +1,192 @@
 /**
- * dados.js - Dados Iniciais dos Jogadores do Baba do IFBA Eunápolis
- * Chico B.E.T - Programação Web (ADS - 4º Semestre)
- * Equipe: Victor Hugo, Paulo Amaral, Kauan Bento, Francisco António e Yan Lacerda
+ * dados.js — Elenco Oficial do Baba do IFBA Eunápolis
+ *
+ * Referência visual: FUTBIN (futbin.com) e EA Sports FC
+ * Atributos oficiais PT-BR:
+ * - RIT: Ritmo (Pace)
+ * - FIN: Finalização (Shooting)
+ * - PAS: Passe (Passing)
+ * - DRI: Drible (Dribbling)
+ * - DEF: Defesa (Defending)
+ * - FIS: Físico (Physicality)
+ *
+ * Nacionalidade, Origem e Equipe (ex: Porto Seguro -> Eunápolis / Angola -> IFBA)
  */
 
-// Formato padrão do Baba da Quadra do IFBA:
-// 1 Goleiro + 5 de Linha = 6 jogadores por equipe (Regra oficial do campus)
-const CONFIG_BABA = {
-  nomeCampus: "IFBA - Campus Eunápolis",
-  jogadoresPorTime: 6, // 1 no gol + 5 na linha
-  quadra: "Quadra Poliesportiva do IFBA",
-  posicoesDisponiveis: [
-    { id: "GOL", nome: "Goleiro" },
-    { id: "ZAG", nome: "Zagueiro / Fixo" },
-    { id: "ALA", nome: "Ala / Lateral" },
-    { id: "MEI", nome: "Meio-Campo" },
-    { id: "ATA", nome: "Atacante / Pivô" }
-  ]
-};
-
-// Elenco real inicial com os integrantes do IFBA
-// Quem tem foto usa o caminho local na pasta 'fotos/', quem não tem fica com string vazia ""
-const ELENCO_INICIAL = [
+var ELENCO_PADRAO = [
   {
-    id: "jog-1",
+    id: "j1",
     nome: "Victor Hugo",
     apelido: "Victor",
     posicao: "MEI",
-    perna: "Destro",
+    perna: "R", // Right / Destro
+    origem: "Porto Seguro",
+    pais: "Brasil",
+    bandeira: "BR",
+    time: "IFBA Eunápolis",
     foto: "fotos/foto_1.jpg",
-    skills: { vel: 4.5, chu: 4.0, pas: 4.5, def: 3.5, fis: 4.0, dri: 4.5 },
-    estrelas: 4.2
+    stats: { rit: 78, fin: 72, pas: 82, dri: 80, def: 64, fis: 70 },
+    ovr: 0
   },
   {
-    id: "jog-2",
+    id: "j2",
     nome: "Paulo Amaral",
     apelido: "Capitão Paulo",
     posicao: "GOL",
-    perna: "Destro",
+    perna: "R",
+    origem: "Eunápolis",
+    pais: "Brasil",
+    bandeira: "BR",
+    time: "IFBA Eunápolis",
     foto: "fotos/foto_2.jpg",
-    skills: { vel: 3.0, chu: 2.5, pas: 3.5, def: 5.0, fis: 4.5, dri: 2.5 },
-    estrelas: 4.0
+    stats: { rit: 58, fin: 45, pas: 65, dri: 52, def: 84, fis: 80 },
+    ovr: 0
   },
   {
-    id: "jog-3",
+    id: "j3",
     nome: "Kauan Bento",
-    apelido: "Bento Resenha",
+    apelido: "Bento",
     posicao: "ATA",
-    perna: "Canhoto",
+    perna: "L", // Left / Canhoto
+    origem: "Eunápolis",
+    pais: "Brasil",
+    bandeira: "BR",
+    time: "IFBA Eunápolis",
     foto: "fotos/foto_3.jpg",
-    skills: { vel: 4.5, chu: 4.5, pas: 3.5, def: 2.5, fis: 4.0, dri: 4.0 },
-    estrelas: 4.1
+    stats: { rit: 84, fin: 82, pas: 68, dri: 79, def: 48, fis: 74 },
+    ovr: 0
   },
   {
-    id: "jog-4",
+    id: "j4",
     nome: "Francisco António",
-    apelido: "Chico Galáctico",
+    apelido: "Chico",
     posicao: "ZAG",
-    perna: "Destro",
+    perna: "R",
+    origem: "Luanda",
+    pais: "Angola",
+    bandeira: "AO", // Angola
+    time: "IFBA Eunápolis",
     foto: "fotos/foto_4.jpg",
-    skills: { vel: 3.5, chu: 3.0, pas: 3.5, def: 4.5, fis: 4.5, dri: 3.0 },
-    estrelas: 3.9
+    stats: { rit: 68, fin: 52, pas: 66, dri: 60, def: 83, fis: 85 },
+    ovr: 0
   },
   {
-    id: "jog-5",
+    id: "j5",
     nome: "Yan Lacerda",
     apelido: "Yan",
     posicao: "ALA",
-    perna: "Ambidestro",
-    foto: "", // Sem foto no momento (placeholder neutro)
-    skills: { vel: 4.0, chu: 3.5, pas: 4.0, def: 3.5, fis: 3.5, dri: 4.0 },
-    estrelas: 3.8
-  },
-  {
-    id: "jog-6",
-    nome: "Gabriel Goleiro",
-    apelido: "Muralha IFBA",
-    posicao: "GOL",
-    perna: "Canhoto",
+    perna: "LR", // Ambidestro
+    origem: "Eunápolis",
+    pais: "Brasil",
+    bandeira: "BR",
+    time: "IFBA Eunápolis",
     foto: "",
-    skills: { vel: 3.0, chu: 2.0, pas: 3.0, def: 4.5, fis: 4.0, dri: 2.0 },
-    estrelas: 3.8
+    stats: { rit: 76, fin: 65, pas: 74, dri: 77, def: 66, fis: 70 },
+    ovr: 0
   },
   {
-    id: "jog-7",
-    nome: "Lucas Silva",
+    id: "j6",
+    nome: "Gabriel Oliveira",
+    apelido: "Muralha",
+    posicao: "GOL",
+    perna: "L",
+    origem: "Porto Seguro",
+    pais: "Brasil",
+    bandeira: "BR",
+    time: "IFBA Eunápolis",
+    foto: "",
+    stats: { rit: 54, fin: 40, pas: 60, dri: 48, def: 82, fis: 78 },
+    ovr: 0
+  },
+  {
+    id: "j7",
+    nome: "Lucas Santos",
     apelido: "Luquinhas",
     posicao: "ZAG",
-    perna: "Destro",
+    perna: "R",
+    origem: "Itabela",
+    pais: "Brasil",
+    bandeira: "BR",
+    time: "IFBA Eunápolis",
     foto: "",
-    skills: { vel: 3.5, chu: 3.0, pas: 3.5, def: 4.0, fis: 4.5, dri: 3.0 },
-    estrelas: 3.7
+    stats: { rit: 65, fin: 50, pas: 64, dri: 58, def: 78, fis: 80 },
+    ovr: 0
   },
   {
-    id: "jog-8",
-    nome: "Matheus Oliveira",
+    id: "j8",
+    nome: "Matheus Lima",
     apelido: "Theus",
     posicao: "ALA",
-    perna: "Destro",
+    perna: "R",
+    origem: "Eunápolis",
+    pais: "Brasil",
+    bandeira: "BR",
+    time: "IFBA Eunápolis",
     foto: "",
-    skills: { vel: 4.0, chu: 3.5, pas: 3.5, def: 3.0, fis: 3.5, dri: 4.0 },
-    estrelas: 3.6
+    stats: { rit: 74, fin: 66, pas: 70, dri: 75, def: 60, fis: 68 },
+    ovr: 0
   },
   {
-    id: "jog-9",
-    nome: "Felipe Santos",
+    id: "j9",
+    nome: "Felipe Souza",
     apelido: "Felipão",
     posicao: "MEI",
-    perna: "Destro",
+    perna: "R",
+    origem: "Arraial d'Ajuda",
+    pais: "Brasil",
+    bandeira: "BR",
+    time: "IFBA Eunápolis",
     foto: "",
-    skills: { vel: 3.5, chu: 4.0, pas: 4.5, def: 3.0, fis: 3.5, dri: 3.5 },
-    estrelas: 3.7
+    stats: { rit: 70, fin: 74, pas: 80, dri: 72, def: 62, fis: 66 },
+    ovr: 0
   },
   {
-    id: "jog-10",
+    id: "j10",
     nome: "Bruno Costa",
     apelido: "Brunão",
     posicao: "ATA",
-    perna: "Destro",
+    perna: "R",
+    origem: "Eunápolis",
+    pais: "Brasil",
+    bandeira: "BR",
+    time: "IFBA Eunápolis",
     foto: "",
-    skills: { vel: 4.5, chu: 4.0, pas: 3.0, def: 2.5, fis: 4.0, dri: 3.5 },
-    estrelas: 3.8
+    stats: { rit: 80, fin: 76, pas: 62, dri: 70, def: 46, fis: 78 },
+    ovr: 0
   },
   {
-    id: "jog-11",
+    id: "j11",
     nome: "Rodrigo Lima",
     apelido: "Flecha",
     posicao: "ALA",
-    perna: "Canhoto",
+    perna: "L",
+    origem: "Trancoso",
+    pais: "Brasil",
+    bandeira: "BR",
+    time: "IFBA Eunápolis",
     foto: "",
-    skills: { vel: 4.5, chu: 3.5, pas: 3.0, def: 3.0, fis: 3.5, dri: 3.5 },
-    estrelas: 3.6
+    stats: { rit: 82, fin: 64, pas: 60, dri: 74, def: 56, fis: 66 },
+    ovr: 0
   },
   {
-    id: "jog-12",
+    id: "j12",
     nome: "Diego Rocha",
     apelido: "Xerifinho",
     posicao: "ZAG",
-    perna: "Destro",
+    perna: "R",
+    origem: "Eunápolis",
+    pais: "Brasil",
+    bandeira: "BR",
+    time: "IFBA Eunápolis",
     foto: "",
-    skills: { vel: 3.0, chu: 2.5, pas: 3.0, def: 4.0, fis: 4.5, dri: 2.5 },
-    estrelas: 3.5
+    stats: { rit: 60, fin: 48, pas: 62, dri: 54, def: 76, fis: 82 },
+    ovr: 0
   }
 ];
 
-const CHAVE_STORAGE = "chico_bet_jogadores_ifba_v2";
+// Calcula o OVR de cada jogador do elenco padrão
+ELENCO_PADRAO.forEach(function(j) {
+  j.ovr = calcularOVR(j.posicao, j.stats);
+});
+
+var CHAVE_DADOS = "chicobet_jogadores_v4";

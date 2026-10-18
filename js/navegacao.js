@@ -1,49 +1,42 @@
 /**
- * navegacao.js - Troca Simples de Telas (SPA)
- * Chico B.E.T - IFBA Eunápolis
+ * navegacao.js — Troca de telas simples (SPA)
  */
 
-function trocarTela(nomeTela) {
-  // 1. Oculta todas as seções
-  const secoes = document.querySelectorAll('.view-section');
-  secoes.forEach(sec => sec.classList.remove('active'));
-
-  // 2. Mostra a seção desejada
-  const secaoDestino = document.getElementById(`view-${nomeTela}`);
-  if (secaoDestino) {
-    secaoDestino.classList.add('active');
+function irPara(tela) {
+  // Oculta todas as views
+  var views = document.querySelectorAll(".view");
+  for (var i = 0; i < views.length; i++) {
+    views[i].classList.remove("active");
   }
 
-  // 3. Atualiza os botões ativos no menu
-  const links = document.querySelectorAll('.nav-link');
-  links.forEach(link => {
-    if (link.getAttribute('data-nav') === nomeTela) {
-      link.classList.add('active');
+  // Mostra a view pedida
+  var destino = document.getElementById("v-" + tela);
+  if (destino) destino.classList.add("active");
+
+  // Marca o botão ativo na nav
+  var btns = document.querySelectorAll(".nav-btn");
+  for (var i = 0; i < btns.length; i++) {
+    if (btns[i].getAttribute("data-tela") === tela) {
+      btns[i].classList.add("active");
     } else {
-      link.classList.remove('active');
+      btns[i].classList.remove("active");
     }
-  });
-
-  // 4. Executa atualizações específicas da tela aberta
-  if (nomeTela === 'dashboard') {
-    atualizarDashboard();
-  } else if (nomeTela === 'elenco') {
-    renderizarCatalogoCartas();
-  } else if (nomeTela === 'sorteio-setup') {
-    renderizarListaPresenca();
   }
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Atualiza dados se necessário
+  if (tela === "inicio") atualizarDashboard();
+  if (tela === "elenco") renderizarCartas();
+  if (tela === "setup") renderizarPresenca();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// Inicializa os cliques de navegação
-function inicializarNavegacao() {
-  document.addEventListener('click', (e) => {
-    const botaoNav = e.target.closest('[data-nav]');
-    if (botaoNav) {
+function iniciarNavegacao() {
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest("[data-tela]");
+    if (btn) {
       e.preventDefault();
-      const tela = botaoNav.getAttribute('data-nav');
-      trocarTela(tela);
+      irPara(btn.getAttribute("data-tela"));
     }
   });
 }

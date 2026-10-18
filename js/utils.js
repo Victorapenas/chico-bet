@@ -1,96 +1,94 @@
 /**
- * utils.js - Funções de Apoio Simples e Diretas
- * Chico B.E.T - IFBA Eunápolis
+ * utils.js — Funções utilitárias (cálculo de OVR, storage, bandeiras e escudos)
+ *
+ * Padrão EA Sports FC / FUTBIN:
+ * - OVR ponderado por posição
+ * - Bandeiras de nacionalidade (Brasil e Angola)
+ * - Escudo da equipe / campus (IFBA Eunápolis)
  */
 
-// 1. Cálculo da nota geral em Estrelas (1.0 a 5.0)
-function calcularEstrelas(posicao, skills) {
-  const vel = parseFloat(skills.vel) || 3;
-  const chu = parseFloat(skills.chu) || 3;
-  const pas = parseFloat(skills.pas) || 3;
-  const def = parseFloat(skills.def) || 3;
-  const fis = parseFloat(skills.fis) || 3;
-  const dri = parseFloat(skills.dri) || 3;
+// 1. Calcula o Overall (OVR) ponderado por posição (1 a 99)
+function calcularOVR(posicao, stats) {
+  var r = parseInt(stats.rit) || 60;
+  var f = parseInt(stats.fin) || 60;
+  var p = parseInt(stats.pas) || 60;
+  var d = parseInt(stats.dri) || 60;
+  var e = parseInt(stats.def) || 60;
+  var s = parseInt(stats.fis) || 60;
 
-  let media = 0;
+  var media = 0;
 
-  // Leve ponderação de acordo com a posição da quadra
-  if (posicao === 'GOL') {
-    media = (def * 0.4) + (fis * 0.3) + (pas * 0.15) + (vel * 0.15);
-  } else if (posicao === 'ZAG') {
-    media = (def * 0.35) + (fis * 0.25) + (pas * 0.15) + (vel * 0.15) + (dri * 0.1);
-  } else if (posicao === 'ATA') {
-    media = (chu * 0.35) + (vel * 0.25) + (dri * 0.2) + (fis * 0.1) + (pas * 0.1);
+  if (posicao === "GOL") {
+    media = (e * 0.40) + (s * 0.30) + (p * 0.15) + (r * 0.15);
+  } else if (posicao === "ZAG") {
+    media = (e * 0.35) + (s * 0.25) + (r * 0.15) + (p * 0.15) + (d * 0.10);
+  } else if (posicao === "ATA") {
+    media = (f * 0.35) + (r * 0.25) + (d * 0.20) + (s * 0.10) + (p * 0.10);
   } else {
-    // Meio-Campo e Ala
-    media = (pas * 0.25) + (dri * 0.25) + (vel * 0.2) + (chu * 0.15) + (def * 0.15);
+    // MEI ou ALA
+    media = (p * 0.25) + (d * 0.25) + (r * 0.20) + (f * 0.15) + (e * 0.15);
   }
 
-  // Limita entre 1.0 e 5.0 com 1 casa decimal
-  const finalScore = Math.max(1, Math.min(5, media));
-  return Math.round(finalScore * 10) / 10;
+  return Math.round(media);
 }
 
-// 2. Renderização visual das estrelinhas (ex: ⭐⭐⭐⭐☆)
-function renderizarEstrelasVisual(nota) {
-  const notaNum = parseFloat(nota) || 0;
-  const estrelasCheias = Math.floor(notaNum);
-  const temMeia = (notaNum - estrelasCheias) >= 0.4;
-  let html = '';
-
-  for (let i = 0; i < estrelasCheias; i++) {
-    html += '<span class="star filled">★</span>';
-  }
-  if (temMeia && estrelasCheias < 5) {
-    html += '<span class="star half">★</span>';
-  }
-  const vazias = 5 - estrelasCheias - (temMeia ? 1 : 0);
-  for (let i = 0; i < vazias; i++) {
-    html += '<span class="star empty">☆</span>';
-  }
-
-  return html;
+// 2. Tier da carta
+function tierDaCarta(ovr) {
+  if (ovr >= 75) return "";           // Gold Rare (padrão)
+  if (ovr >= 65) return "card-silver";
+  return "card-bronze";
 }
 
-// 3. Obter jogadores do LocalStorage
-function obterJogadores() {
-  const dados = localStorage.getItem(CHAVE_STORAGE);
-  if (!dados) {
-    salvarJogadores(ELENCO_INICIAL);
-    return [...ELENCO_INICIAL];
+// 3. Bandeiras vetoriais nítidas estilo FUTBIN (Brasil e Angola)
+function htmlBandeira(codigoPais) {
+  if (codigoPais === "AO") {
+    // Bandeira de Angola: metade vermelha, metade preta com símbolo amarelo
+    return '<span class="card-flag" title="Angola" style="background: linear-gradient(180deg, #c8102e 50%, #000 50%);"></span>';
+  }
+  // Padrão: Bandeira do Brasil
+  return '<span class="card-flag" title="Brasil" style="background: #009c3b; position:relative;"><span style="position:absolute; inset:2px; background:#ffdf00; clip-path:polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"></span></span>';
+}
+
+// 4. Escudo da Equipe / IFBA estilo FUTBIN
+function htmlEscudoTime(nomeTime) {
+  return '<span class="card-club-badge" title="' + (nomeTime || 'IFBA') + '">IFBA</span>';
+}
+
+// 5. Carregar jogadores do LocalStorage
+function carregarJogadores() {
+  var json = localStorage.getItem(CHAVE_DADOS);
+  if (!json) {
+    guardarJogadores(ELENCO_PADRAO);
+    return ELENCO_PADRAO.slice();
   }
   try {
-    return JSON.parse(dados);
+    return JSON.parse(json);
   } catch (e) {
-    return [...ELENCO_INICIAL];
+    return ELENCO_PADRAO.slice();
   }
 }
 
-// 4. Salvar jogadores no LocalStorage
-function salvarJogadores(lista) {
-  localStorage.setItem(CHAVE_STORAGE, JSON.stringify(lista));
+// 6. Salvar jogadores no LocalStorage
+function guardarJogadores(lista) {
+  localStorage.setItem(CHAVE_DADOS, JSON.stringify(lista));
 }
 
-// 5. Placeholder neutro para quem está sem foto
-function obterFotoJogador(caminhoFoto) {
-  if (caminhoFoto && caminhoFoto.trim() !== "") {
-    return caminhoFoto;
-  }
-  // Silhueta simples e neutra em SVG inline
-  return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%2394a3b8"><circle cx="50" cy="35" r="22"/><path d="M15 88 C15 62 85 62 85 88 Z"/></svg>';
+// 7. Retorna foto ou placeholder
+function urlFoto(caminho) {
+  if (caminho && caminho.trim() !== "") return caminho;
+  return "";
 }
 
-// 6. Mensagem rápida na tela (Toast)
-function mostrarNotificacao(texto) {
-  let box = document.getElementById('notificacao-toast');
-  if (!box) {
-    box = document.createElement('div');
-    box.id = 'notificacao-toast';
-    document.body.appendChild(box);
-  }
-  box.textContent = texto;
-  box.className = 'toast show';
-  setTimeout(() => {
-    box.className = 'toast';
-  }, 3000);
+// 8. Iniciais do nome
+function iniciais(nome) {
+  return nome.split(" ").map(function(p) { return p[0]; }).slice(0, 2).join("").toUpperCase();
+}
+
+// 9. Toast
+function notify(texto) {
+  var el = document.getElementById("toast");
+  if (!el) return;
+  el.textContent = texto;
+  el.className = "toast show";
+  setTimeout(function() { el.className = "toast"; }, 3000);
 }

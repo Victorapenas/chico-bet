@@ -1,149 +1,32 @@
-/* Media Queries e Adaptação Responsiva (Mobile First & Tablet) */
+/* responsivo.css - Adaptação Mobile e Tablet */
 
-/* Telas Médias / Tablets (Menor que 768px) */
 @media (max-width: 768px) {
-  .app-container {
-    padding: 0 12px;
-  }
-
-  .header-content {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .nav-menu {
-    width: 100%;
-    justify-content: space-around;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-
-  .nav-link {
-    padding: 6px 10px;
-    font-size: 0.82rem;
-  }
-
-  .hero-card {
-    padding: 20px 16px;
-  }
-
-  .hero-title {
-    font-size: 1.6rem;
-  }
-
-  .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 16px;
-  }
-
-  .fut-card {
-    width: 180px;
-    height: 290px;
-    padding: 10px;
-  }
-
-  .fut-ovr {
-    font-size: 1.8rem;
-  }
-
-  .fut-pos {
-    font-size: 0.85rem;
-  }
-
-  .fut-photo-container {
-    width: 100px;
-    height: 110px;
-  }
-
-  .fut-name {
-    font-size: 0.95rem;
-  }
-
-  .fut-stats {
-    padding: 2px 4px;
-    column-gap: 8px;
-  }
-
-  .fut-stat-item {
-    font-size: 0.78rem;
-  }
-
-  .fut-stat-val {
-    font-size: 0.88rem;
-  }
-
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .setup-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .setup-actions-fast {
-    justify-content: space-between;
-  }
-
-  .team-size-picker {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .teams-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .results-header-banner {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .results-actions-footer {
-    flex-direction: column;
-  }
-
-  .results-actions-footer .btn {
-    width: 100%;
-  }
-
-  .field-view {
-    display: none; /* Em telas muito pequenas o card é prioridade */
-  }
+  .header-inner { flex-direction: column; height: auto; padding: 10px 0; gap: 8px; }
+  .main-nav { width: 100%; justify-content: space-around; }
+  .nav-btn { padding: 6px 10px; font-size: 0.8rem; }
+  .hero { padding: 20px 16px; }
+  .hero h2 { font-size: 1.4rem; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .cards-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+  .fut-card { width: 160px; height: 245px; padding: 8px; }
+  .card-ovr { font-size: 1.6rem; }
+  .card-photo { width: 80px; height: 85px; }
+  .card-player-name { font-size: 0.82rem; }
+  .stat-num { font-size: 0.8rem; }
+  .stat-abbr { font-size: 0.62rem; }
+  .form-grid { grid-template-columns: 1fr; }
+  .quick-bar { flex-direction: column; align-items: stretch; }
+  .teams-grid { grid-template-columns: 1fr; }
+  .result-bar { flex-direction: column; align-items: stretch; }
+  .result-footer { flex-direction: column; }
+  .result-footer .btn { width: 100%; }
+  .pitch { height: 450px; }
+  .slot-photo { width: 42px; height: 42px; }
+  .slot-tag { font-size: 0.6rem; }
 }
 
-/* Telas Muito Pequenas (Menor que 480px) */
 @media (max-width: 480px) {
-  .logo-text h1 {
-    font-size: 1.3rem;
-  }
-
-  .cards-grid {
-    grid-template-columns: 1fr;
-    justify-items: center;
-  }
-
-  .fut-card {
-    width: 210px;
-    height: 320px;
-  }
-
-  .fut-ovr {
-    font-size: 2.1rem;
-  }
-
-  .fut-photo-container {
-    width: 120px;
-    height: 130px;
-  }
-
-  .toast {
-    width: calc(100vw - 32px);
-    margin: 0 16px;
-  }
+  .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .fut-card { width: 100%; max-width: 175px; }
+  .logo-name { font-size: 1.2rem; }
 }

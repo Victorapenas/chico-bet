@@ -1,66 +1,61 @@
 /**
- * app.js - Inicialização Geral da Aplicação
- * Chico B.E.T - IFBA Eunápolis
+ * app.js — Inicialização e Dashboard
+ * Chico B.E.T — IFBA Eunápolis
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-  console.log("⚽ Chico B.E.T - Inicializando Baba da Quadra do IFBA Eunápolis...");
+document.addEventListener("DOMContentLoaded", function() {
+  // 1. Carrega dados no LocalStorage
+  carregarJogadores();
 
-  // Garante que o storage possui os dados iniciais
-  obterJogadores();
+  // 2. Inicializa módulos
+  iniciarNavegacao();
+  iniciarCartas();
+  iniciarCadastro();
+  iniciarSorteio();
 
-  // Inicializa os módulos
-  inicializarNavegacao();
-  inicializarCartas();
-  inicializarCadastro();
-  inicializarSorteio();
-
-  // Atualiza contadores da tela inicial
+  // 3. Atualiza contadores
   atualizarDashboard();
 
-  // Botão para restaurar elenco original do IFBA
-  const btnReset = document.getElementById('btn-reset-factory');
+  // 4. Restaurar elenco original
+  var btnReset = document.getElementById("btn-reset-elenco");
   if (btnReset) {
-    btnReset.addEventListener('click', () => {
-      if (confirm("Deseja restaurar o elenco original com os dados e fotos da turma do IFBA?")) {
-        salvarJogadores(ELENCO_INICIAL);
-        renderizarCatalogoCartas();
-        renderizarListaPresenca();
+    btnReset.addEventListener("click", function() {
+      if (confirm("Deseja restaurar o elenco oficial com os integrantes do IFBA?")) {
+        guardarJogadores(ELENCO_PADRAO);
+        renderizarCartas();
+        renderizarPresenca();
         atualizarDashboard();
-        mostrarNotificacao("Elenco original do IFBA restaurado!");
+        notify("Elenco oficial do IFBA restaurado.");
       }
     });
   }
 });
 
-// Atualiza os contadores na tela inicial (Dashboard)
 function atualizarDashboard() {
-  const lista = obterJogadores();
-  const total = lista.length;
+  var lista = carregarJogadores();
+  var total = lista.length;
 
-  const countTotal = document.getElementById('dash-count-total');
-  const countMedia = document.getElementById('dash-count-media');
-  const countGoleiros = document.getElementById('dash-count-goleiros');
-  const countLinha = document.getElementById('dash-count-atacantes');
+  var countTotal = document.getElementById("dash-total");
+  var countMedia = document.getElementById("dash-media");
+  var countGoleiros = document.getElementById("dash-goleiros");
+  var countLinha = document.getElementById("dash-linha");
 
   if (countTotal) countTotal.textContent = total;
 
   if (countMedia) {
     if (total === 0) {
-      countMedia.textContent = "0.0 ⭐";
+      countMedia.textContent = "0";
     } else {
-      const soma = lista.reduce((acc, j) => acc + (j.estrelas || 0), 0);
-      countMedia.textContent = (soma / total).toFixed(1) + " ⭐";
+      var soma = lista.reduce(function(acc, j) { return acc + (j.ovr || 0); }, 0);
+      countMedia.textContent = Math.round(soma / total);
     }
   }
 
   if (countGoleiros) {
-    const totalGk = lista.filter(j => j.posicao === 'GOL').length;
-    countGoleiros.textContent = totalGk;
+    countGoleiros.textContent = lista.filter(function(j) { return j.posicao === "GOL"; }).length;
   }
 
   if (countLinha) {
-    const totalLinha = lista.filter(j => j.posicao !== 'GOL').length;
-    countLinha.textContent = totalLinha;
+    countLinha.textContent = lista.filter(function(j) { return j.posicao !== "GOL"; }).length;
   }
 }

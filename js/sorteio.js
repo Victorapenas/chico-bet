@@ -1,309 +1,286 @@
 /**
- * sorteio.js - Algoritmo de Sorteio do Baba do IFBA & Campo Tático 7a0
- * Chico B.E.T - IFBA Eunápolis
- * Regra da Quadra: 1 no gol + 5 na linha = 6 jogadores por equipe
+ * sorteio.js — Algoritmo de Sorteio e Campo Tático estilo 7a0.com.br
+ * Chico B.E.T — IFBA Eunápolis
+ *
+ * Regra da Quadra: 1 Goleiro + 5 Linha (6 por equipe)
+ * Posições táticas: GOL, ZAG E, ZAG D, ALA E, ALA D, PIVÔ
  */
 
-let jogadoresPresentesIds = new Set();
-let timesFormados = [];
-let timeVisualizadoNoCampo = 0; // 0 = Time A, 1 = Time B
+var confirmadosIds = new Set();
+var times = [];
+var timeAtivoCampo = 0; // 0 = Time A, 1 = Time B
 
-// Inicializa a tela de sorteio
-function inicializarSorteio() {
-  const btnMarcarTodos = document.getElementById('btn-selecionar-todos');
-  const btnDesmarcarTodos = document.getElementById('btn-desmarcar-todos');
-  const btnSortear = document.getElementById('btn-executar-sorteio');
-  const btnSortearDeNovo = document.getElementById('btn-refazer-sorteio');
-  const btnWhatsapp = document.getElementById('btn-compartilhar-whatsapp');
+function iniciarSorteio() {
+  var btnTodos = document.getElementById("btn-marcar-todos");
+  var btnNenhum = document.getElementById("btn-desmarcar-todos");
+  var btnSortear = document.getElementById("btn-executar-sorteio");
+  var btnRefazer = document.getElementById("btn-refazer-sorteio");
+  var btnWhats = document.getElementById("btn-whats");
 
-  if (btnMarcarTodos) {
-    btnMarcarTodos.addEventListener('click', () => {
-      const todos = obterJogadores();
-      todos.forEach(j => jogadoresPresentesIds.add(j.id));
-      renderizarListaPresenca();
+  if (btnTodos) {
+    btnTodos.addEventListener("click", function() {
+      carregarJogadores().forEach(function(j) { confirmadosIds.add(j.id); });
+      renderizarPresenca();
     });
   }
 
-  if (btnDesmarcarTodos) {
-    btnDesmarcarTodos.addEventListener('click', () => {
-      jogadoresPresentesIds.clear();
-      renderizarListaPresenca();
+  if (btnNenhum) {
+    btnNenhum.addEventListener("click", function() {
+      confirmadosIds.clear();
+      renderizarPresenca();
     });
   }
 
-  if (btnSortear) btnSortear.addEventListener('click', sortearEquipesIFBA);
-  if (btnSortearDeNovo) btnSortearDeNovo.addEventListener('click', sortearEquipesIFBA);
-  if (btnWhatsapp) btnWhatsapp.addEventListener('click', compartilharNoWhatsApp);
+  if (btnSortear) btnSortear.addEventListener("click", sortearEquipes);
+  if (btnRefazer) btnRefazer.addEventListener("click", sortearEquipes);
+  if (btnWhats) btnWhats.addEventListener("click", compartilharWhatsApp);
 
-  // Marca todos os jogadores por padrão na primeira carga
-  const lista = obterJogadores();
-  lista.forEach(j => jogadoresPresentesIds.add(j.id));
-  renderizarListaPresenca();
+  // Inicializa marcando todos
+  carregarJogadores().forEach(function(j) { confirmadosIds.add(j.id); });
+  renderizarPresenca();
 }
 
-// Renderiza a lista de presença com checkboxes
-function renderizarListaPresenca() {
-  const container = document.getElementById('attendance-list-container');
-  const displayContador = document.getElementById('count-confirmados');
-  const displayPrevisao = document.getElementById('count-previsao-times');
+function renderizarPresenca() {
+  var container = document.getElementById("lista-presenca");
+  var countEl = document.getElementById("count-presentes");
+  var prevEl = document.getElementById("count-previsao");
   if (!container) return;
 
-  const jogadores = obterJogadores();
-  const totalMarcados = jogadoresPresentesIds.size;
+  var jogadores = carregarJogadores();
+  var total = confirmadosIds.size;
 
-  if (displayContador) displayContador.textContent = totalMarcados;
-  if (displayPrevisao) {
-    const qtdTimes = Math.floor(totalMarcados / 6);
-    displayPrevisao.innerHTML = `(Regra da Quadra: 1 Goleiro + 5 Linha) • Formará <strong>${qtdTimes} equipes completas</strong>`;
+  if (countEl) countEl.textContent = total;
+  if (prevEl) {
+    var qtdTimes = Math.floor(total / 6);
+    prevEl.innerHTML = "Regra da Quadra: 1 Goleiro + 5 Linha &bull; <strong>" + qtdTimes + " equipes</strong> de 6 atletas";
   }
 
-  container.innerHTML = jogadores.map(j => {
-    const selecionado = jogadoresPresentesIds.has(j.id);
-    const fotoSrc = obterFotoJogador(j.foto);
+  var html = "";
+  for (var i = 0; i < jogadores.length; i++) {
+    var j = jogadores[i];
+    var sel = confirmadosIds.has(j.id);
+    var foto = urlFoto(j.foto);
 
-    return `
-      <div class="attendance-item ${selecionado ? 'selected' : ''}" onclick="alternarPresenca('${j.id}')">
-        <div class="attendee-left">
-          <div class="checkbox-custom">${selecionado ? '✓' : ''}</div>
-          <img src="${fotoSrc}" class="attendee-avatar" alt="${j.nome}">
-          <div class="attendee-details">
-            <div class="attendee-name">${j.nome} ${j.apelido ? `(${j.apelido})` : ''}</div>
-            <div class="attendee-meta">
-              <span class="pos-tag pos-${j.posicao}">${j.posicao}</span>
-              <span>Perna: ${j.perna || 'Destro'}</span>
-            </div>
-          </div>
-        </div>
-        <div class="attendee-stars">${j.estrelas.toFixed(1)} ⭐</div>
-      </div>
-    `;
-  }).join('');
+    html += '<div class="check-item ' + (sel ? 'on' : '') + '" onclick="togglePresenca(\'' + j.id + '\')">' +
+      '<div class="check-left">' +
+        '<div class="check-box">' + (sel ? '&#10003;' : '') + '</div>' +
+        '<img src="' + (foto || 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\' fill=\'%23555b66\'><circle cx=\'50\' cy=\'35\' r=\'20\'/><path d=\'M18 85 C18 60 82 60 82 85 Z\'/></svg>') + '" class="check-avatar" alt="' + j.nome + '">' +
+        '<div class="check-info">' +
+          '<div class="check-name">' + j.nome + (j.apelido ? ' (' + j.apelido + ')' : '') + '</div>' +
+          '<div class="check-meta">' +
+            '<span class="pos-badge pos-' + j.posicao + '">' + j.posicao + '</span>' +
+            '<span>' + (j.origem || 'Eunápolis') + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="check-ovr">' + j.ovr + '</div>' +
+    '</div>';
+  }
+  container.innerHTML = html;
 }
 
-// Alterna presença do jogador ao clicar na linha
-function alternarPresenca(id) {
-  if (jogadoresPresentesIds.has(id)) {
-    jogadoresPresentesIds.delete(id);
+function togglePresenca(id) {
+  if (confirmadosIds.has(id)) {
+    confirmadosIds.delete(id);
   } else {
-    jogadoresPresentesIds.add(id);
+    confirmadosIds.add(id);
   }
-  renderizarListaPresenca();
+  renderizarPresenca();
 }
 
-// Lógica de Sorteio Balanceado por Estrelas e Goleiros
-function sortearEquipesIFBA() {
-  const todos = obterJogadores();
-  const presentes = todos.filter(j => jogadoresPresentesIds.has(j.id));
+function sortearEquipes() {
+  var todos = carregarJogadores();
+  var selecionados = todos.filter(function(j) { return confirmadosIds.has(j.id); });
 
-  // Precisa de pelo menos 10 pessoas para fazer 2 times de baba
-  if (presentes.length < 10) {
-    alert("Selecione pelo menos 10 atletas para sortear 2 equipes!");
+  if (selecionados.length < 10) {
+    alert("Selecione pelo menos 10 atletas para dividir 2 equipes!");
     return;
   }
 
-  // Quantidade de times (mínimo 2)
-  const qtdTimes = Math.max(2, Math.floor(presentes.length / 6));
+  var qtdTimes = Math.max(2, Math.floor(selecionados.length / 6));
 
-  // 1. Separa Goleiros e Linha
-  const goleiros = presentes.filter(j => j.posicao === 'GOL');
-  const linha = presentes.filter(j => j.posicao !== 'GOL');
+  var goleiros = selecionados.filter(function(j) { return j.posicao === "GOL"; });
+  var linha = selecionados.filter(function(j) { return j.posicao !== "GOL"; });
 
-  // Cria estrutura dos times
-  const times = Array.from({ length: qtdTimes }, (_, i) => ({
-    nome: `Time ${String.fromCharCode(65 + i)}`,
-    jogadores: [],
-    estrelasTotal: 0,
-    estrelasMedia: 0
-  }));
+  var novosTimes = [];
+  for (var i = 0; i < qtdTimes; i++) {
+    novosTimes.push({
+      nome: "Time " + String.fromCharCode(65 + i),
+      jogadores: [],
+      somaOvr: 0,
+      mediaOvr: 0
+    });
+  }
 
-  // 2. Distribui os Goleiros proporcionalmente (1 para cada time)
-  goleiros.sort((a, b) => b.estrelas - a.estrelas);
-  goleiros.forEach((gk, index) => {
-    const timeIdx = index % qtdTimes;
-    times[timeIdx].jogadores.push(gk);
-    times[timeIdx].estrelasTotal += gk.estrelas;
+  // 1. Distribui goleiros proporcionalmente (1 para cada time)
+  goleiros.sort(function(a, b) { return b.ovr - a.ovr; });
+  goleiros.forEach(function(gk, idx) {
+    var tIdx = idx % qtdTimes;
+    novosTimes[tIdx].jogadores.push(gk);
+    novosTimes[tIdx].somaOvr += gk.ovr;
   });
 
-  // 3. Distribui os Jogadores de Linha para equilibrar o nível (Estrelas)
-  // Ordena do melhor para o pior nível
-  linha.sort((a, b) => b.estrelas - a.estrelas);
+  // 2. Distribui linha equilibrando o OVR
+  linha.sort(function(a, b) { return b.ovr - a.ovr; });
 
-  // Para cada atleta, aloca no time que estiver com menos jogadores ou menor média de estrelas
-  linha.forEach(jogador => {
-    // Escolhe o time com menor número de jogadores ou menor total de estrelas
-    times.sort((t1, t2) => {
+  linha.forEach(function(atleta) {
+    novosTimes.sort(function(t1, t2) {
       if (t1.jogadores.length !== t2.jogadores.length) {
         return t1.jogadores.length - t2.jogadores.length;
       }
-      return t1.estrelasTotal - t2.estrelasTotal;
+      return t1.somaOvr - t2.somaOvr;
     });
 
-    times[0].jogadores.push(jogador);
-    times[0].estrelasTotal += jogador.estrelas;
+    novosTimes[0].jogadores.push(atleta);
+    novosTimes[0].somaOvr += atleta.ovr;
   });
 
-  // 4. Calcula a média final de estrelas de cada time
-  times.forEach(t => {
-    t.estrelasMedia = t.jogadores.length > 0 ? (t.estrelasTotal / t.jogadores.length) : 0;
+  // 3. Calcula médias
+  novosTimes.forEach(function(t) {
+    t.mediaOvr = t.jogadores.length > 0 ? Math.round(t.somaOvr / t.jogadores.length) : 0;
   });
 
-  // Restaura ordem padrão (Time A, Time B...)
-  times.sort((a, b) => a.nome.localeCompare(b.nome));
+  novosTimes.sort(function(a, b) { return a.nome.localeCompare(b.nome); });
 
-  timesFormados = times;
-  timeVisualizadoNoCampo = 0;
+  times = novosTimes;
+  timeAtivoCampo = 0;
 
-  // Renderiza e navega para resultados
   renderizarResultados();
-  trocarTela('sorteio-resultado');
-  mostrarNotificacao("Times do IFBA sorteados com sucesso! ⚽");
+  irPara("resultado");
+  notify("Equipes sorteadas com equilíbrio de Overall.");
 }
 
-// Renderiza a Tela de Resultados com o Campo 7a0 e os Cards
 function renderizarResultados() {
-  const containerAbas = document.getElementById('field-team-tabs-container');
-  const containerCards = document.getElementById('teams-cards-summary-container');
-  const bannerEquilibrio = document.getElementById('balance-summary-text');
+  var tabsContainer = document.getElementById("field-tabs-wrap");
+  var cardsContainer = document.getElementById("teams-grid-wrap");
+  var statusText = document.getElementById("balance-status-text");
 
-  if (timesFormados.length === 0) return;
+  if (times.length === 0) return;
 
-  // Calcula a diferença entre os times
-  const medias = timesFormados.map(t => t.estrelasMedia);
-  const diff = (Math.max(...medias) - Math.min(...medias)).toFixed(1);
+  var medias = times.map(function(t) { return t.mediaOvr; });
+  var diff = Math.max.apply(null, medias) - Math.min.apply(null, medias);
 
-  if (bannerEquilibrio) {
-    bannerEquilibrio.innerHTML = `
-      <h4>⚖️ Baba 100% Equilibrado!</h4>
-      <p>Diferença média entre as equipes: <strong>${diff} estrelas</strong>. Sem favoritismo na quadra do IFBA!</p>
-    `;
+  if (statusText) {
+    statusText.innerHTML = "<strong>Equilíbrio Técnico:</strong> Diferença entre as equipes de <strong>" + diff + " OVR</strong> na quadra do IFBA.";
   }
 
-  // Abas para selecionar qual time ver no Campo 7a0
-  if (containerAbas) {
-    containerAbas.innerHTML = timesFormados.map((time, idx) => `
-      <button class="field-tab-btn ${idx === timeVisualizadoNoCampo ? 'active' : ''}" onclick="trocarTimeVisualizadoNoCampo(${idx})">
-        <span>${idx === 0 ? '🟢' : idx === 1 ? '🟡' : '🔵'}</span>
-        ${time.nome} (${time.estrelasMedia.toFixed(1)} ⭐)
-      </button>
-    `).join('');
+  // Abas dos times
+  if (tabsContainer) {
+    var tabsHtml = "";
+    for (var i = 0; i < times.length; i++) {
+      tabsHtml += '<button class="field-tab ' + (i === timeAtivoCampo ? 'active' : '') + '" onclick="selecionarTimeCampo(' + i + ')">' +
+        times[i].nome + ' (' + times[i].mediaOvr + ' OVR)' +
+      '</button>';
+    }
+    tabsContainer.innerHTML = tabsHtml;
   }
 
-  // Renderiza o campo tático estilo 7a0 para o time ativo
-  desenharCampoTatico7a0(timesFormados[timeVisualizadoNoCampo]);
+  // Desenha no campo 7a0
+  desenharCampo7a0(times[timeAtivoCampo]);
 
-  // Renderiza os cards comparativos dos times abaixo do campo
-  if (containerCards) {
-    containerCards.innerHTML = timesFormados.map(time => `
-      <div class="team-summary-box">
-        <div class="team-summary-header">
-          <span class="team-summary-title">${time.nome}</span>
-          <span class="team-summary-stars">${time.estrelasMedia.toFixed(1)} ⭐</span>
-        </div>
-        <div class="team-roster-list">
-          ${time.jogadores.map(j => `
-            <div class="team-player-row ${j.posicao === 'GOL' ? 'is-gol' : ''}">
-              <div>
-                <span class="pos-tag pos-${j.posicao}" style="font-size:0.65rem; padding: 2px 4px;">${j.posicao}</span>
-                <strong>${j.nome}</strong> ${j.apelido ? `"${j.apelido}"` : ''}
-              </div>
-              <span style="color:#facc15; font-weight:700;">${j.estrelas.toFixed(1)} ⭐</span>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `).join('');
+  // Cards dos times
+  if (cardsContainer) {
+    var html = "";
+    for (var i = 0; i < times.length; i++) {
+      var t = times[i];
+      html += '<div class="team-box">' +
+        '<div class="team-head">' +
+          '<h4>' + t.nome + '</h4>' +
+          '<span class="team-ovr">Média: ' + t.mediaOvr + ' OVR</span>' +
+        '</div>' +
+        '<div class="team-list">';
+      for (var j = 0; j < t.jogadores.length; j++) {
+        var p = t.jogadores[j];
+        html += '<div class="team-row ' + (p.posicao === 'GOL' ? 'gk' : '') + '">' +
+          '<div>' +
+            '<span class="pos-badge pos-' + p.posicao + '" style="font-size:0.65rem; margin-right:6px;">' + p.posicao + '</span>' +
+            '<strong>' + p.nome + '</strong>' +
+          '</div>' +
+          '<span class="team-row-ovr">' + p.ovr + '</span>' +
+        '</div>';
+      }
+      html += '</div></div>';
+    }
+    cardsContainer.innerHTML = html;
   }
 }
 
-// Alternar time exibido no campo
-function trocarTimeVisualizadoNoCampo(indice) {
-  timeVisualizadoNoCampo = indice;
+function selecionarTimeCampo(indice) {
+  timeAtivoCampo = indice;
   renderizarResultados();
 }
 
-// Desenha a formação tática de 6 jogadores (1 GOL + 5 Linha) no campo estilo 7a0
-function desenharCampoTatico7a0(time) {
-  const pitch = document.getElementById('field-pitch-slots');
+function desenharCampo7a0(time) {
+  var pitch = document.getElementById("pitch-slots");
   if (!pitch || !time) return;
 
-  const jogadores = [...time.jogadores];
+  var lista = time.jogadores.slice();
 
-  // Separação dos 6 jogadores da formação padrão do IFBA:
-  // 1 Goleiro, 2 Zagueiros/Fixos, 2 Alas/Laterais, 1 Atacante/Pivô
-  let goleiro = jogadores.find(j => j.posicao === 'GOL');
-  let zagueiros = jogadores.filter(j => j.posicao === 'ZAG');
-  let alas = jogadores.filter(j => j.posicao === 'ALA' || j.posicao === 'MEI');
-  let atacantes = jogadores.filter(j => j.posicao === 'ATA');
+  var gol = lista.find(function(j) { return j.posicao === "GOL"; });
+  var zags = lista.filter(function(j) { return j.posicao === "ZAG"; });
+  var alas = lista.filter(function(j) { return j.posicao === "ALA" || j.posicao === "MEI"; });
+  var atas = lista.filter(function(j) { return j.posicao === "ATA"; });
 
-  // Jogadores que sobram para preencher eventuais posições faltantes
-  let sobram = jogadores.filter(j => j !== goleiro && !zagueiros.includes(j) && !alas.includes(j) && !atacantes.includes(j));
-
-  // Preenchimento de segurança caso falte alguma posição específica
-  const getProximo = () => {
-    return sobram.shift() || atacantes.pop() || alas.pop() || zagueiros.pop() || null;
-  };
-
-  const pGol = goleiro || getProximo();
-  const pZag1 = zagueiros.shift() || getProximo();
-  const pZag2 = zagueiros.shift() || getProximo();
-  const pAla1 = alas.shift() || getProximo();
-  const pAla2 = alas.shift() || getProximo();
-  const pAta = atacantes.shift() || getProximo();
-
-  const posicoesTaticas = [
-    { atleta: pGol, classePos: 'slot-pos-gol', labelPadrao: 'GOL' },
-    { atleta: pZag1, classePos: 'slot-pos-zag-esq', labelPadrao: 'ZAG E' },
-    { atleta: pZag2, classePos: 'slot-pos-zag-dir', labelPadrao: 'ZAG D' },
-    { atleta: pAla1, classePos: 'slot-pos-ala-esq', labelPadrao: 'ALA E' },
-    { atleta: pAla2, classePos: 'slot-pos-ala-dir', labelPadrao: 'ALA D' },
-    { atleta: pAta, classePos: 'slot-pos-ataque', labelPadrao: 'PIVÔ' },
-  ];
-
-  pitch.innerHTML = posicoesTaticas.map(slot => {
-    const a = slot.atleta;
-    if (!a) {
-      return `
-        <div class="pitch-slot ${slot.classePos}">
-          <div class="slot-badge-photo dashed-empty">${slot.labelPadrao}</div>
-          <div class="slot-name-tag">Vago</div>
-        </div>
-      `;
-    }
-
-    const foto = obterFotoJogador(a.foto);
-
-    return `
-      <div class="pitch-slot ${slot.classePos}" title="${a.nome} (${a.posicao})">
-        <div class="slot-badge-photo">
-          <img src="${foto}" alt="${a.nome}">
-        </div>
-        <div class="slot-name-tag">
-          ${a.apelido || a.nome.split(' ')[0]}
-          <span class="slot-star-tag">★ ${a.estrelas.toFixed(1)}</span>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-// Compartilhamento no WhatsApp
-function compartilharNoWhatsApp() {
-  if (timesFormados.length === 0) return;
-
-  let msg = `⚽ *ESCALAÇÃO OFICIAL DO BABA - IFBA EUNÁPOLIS* 🏟️%0A`;
-  msg += `_Sorteio equilibrado na quadra (1 Goleiro + 5 Linha)_%0A%0A`;
-
-  timesFormados.forEach(time => {
-    msg += `*${time.nome.toUpperCase()}* (${time.estrelasMedia.toFixed(1)} ⭐)%0A`;
-    time.jogadores.forEach(j => {
-      const icone = j.posicao === 'GOL' ? '🧤' : '🏃';
-      msg += `${icone} [${j.posicao}] ${j.nome}${j.apelido ? ` "${j.apelido}"` : ''} - ${j.estrelas.toFixed(1)}⭐%0A`;
-    });
-    msg += `%0A`;
+  var outros = lista.filter(function(j) {
+    return j !== gol && zags.indexOf(j) === -1 && alas.indexOf(j) === -1 && atas.indexOf(j) === -1;
   });
 
-  msg += `📍 *Local:* Quadra Poliesportiva do IFBA%0A`;
-  msg += `🔥 _Resenha garantida!_`;
+  function pegarUm() {
+    return outros.shift() || atas.pop() || alas.pop() || zags.pop() || null;
+  }
 
-  window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+  var slots = [
+    { a: gol || pegarUm(), c: "pos-gol", lbl: "GOL" },
+    { a: zags.shift() || pegarUm(), c: "pos-zag-e", lbl: "ZAG" },
+    { a: zags.shift() || pegarUm(), c: "pos-zag-d", lbl: "ZAG" },
+    { a: alas.shift() || pegarUm(), c: "pos-ala-e", lbl: "ALA" },
+    { a: alas.shift() || pegarUm(), c: "pos-ala-d", lbl: "ALA" },
+    { a: atas.shift() || pegarUm(), c: "pos-pivo", lbl: "PIVÔ" }
+  ];
+
+  var html = "";
+  for (var i = 0; i < slots.length; i++) {
+    var s = slots[i];
+    var atleta = s.a;
+
+    if (!atleta) {
+      html += '<div class="slot ' + s.c + '">' +
+        '<div class="slot-photo empty"></div>' +
+        '<div class="slot-tag">' + s.lbl + '</div>' +
+      '</div>';
+    } else {
+      var foto = urlFoto(atleta.foto);
+      html += '<div class="slot ' + s.c + '">' +
+        '<div class="slot-photo">' +
+          (foto ? '<img src="' + foto + '" alt="' + atleta.nome + '">' : '<span style="color:#fff; font-size:0.7rem; font-weight:800; display:flex; align-items:center; justify-content:center; height:100%;">' + atleta.posicao + '</span>') +
+        '</div>' +
+        '<div class="slot-tag">' +
+          (atleta.apelido || atleta.nome.split(" ")[0]) +
+          '<span class="tag-ovr">' + atleta.ovr + '</span>' +
+        '</div>' +
+      '</div>';
+    }
+  }
+  pitch.innerHTML = html;
+}
+
+function compartilharWhatsApp() {
+  if (times.length === 0) return;
+
+  var msg = "*ESCALAÇÃO OFICIAL DO BABA — IFBA EUNÁPOLIS*%0A";
+  msg += "Sorteio balanceado na quadra poliesportiva (1 Goleiro + 5 Linha)%0A%0A";
+
+  for (var i = 0; i < times.length; i++) {
+    var t = times[i];
+    msg += "*" + t.nome.toUpperCase() + "* (Média: " + t.mediaOvr + " OVR)%0A";
+    for (var j = 0; j < t.jogadores.length; j++) {
+      var p = t.jogadores[j];
+      var tag = p.posicao === "GOL" ? "[GOL]" : "[" + p.posicao + "]";
+      msg += tag + " " + p.nome + (p.apelido ? ' "' + p.apelido + '"' : '') + " — " + p.ovr + " OVR%0A";
+    }
+    msg += "%0A";
+  }
+
+  msg += "Local: Quadra Poliesportiva do IFBA Eunápolis";
+  window.open("https://api.whatsapp.com/send?text=" + msg, "_blank");
 }
