@@ -117,6 +117,8 @@ function editarJogador(id) {
   document.getElementById("player-perna-in").value = j.perna || "R";
   document.getElementById("player-origem-in").value = j.origem || "Eunápolis";
   document.getElementById("player-pais-in").value = j.bandeira || "BR";
+  var catInput = document.getElementById("player-cat-in");
+  if (catInput) catInput.value = j.categoria || "mensalista";
 
   if (j.foto) {
     document.getElementById("photo-preview").src = j.foto;
@@ -148,6 +150,7 @@ function salvarJogador() {
   var perna = document.getElementById("player-perna-in").value;
   var origem = document.getElementById("player-origem-in").value.trim() || "Eunápolis";
   var bandeira = document.getElementById("player-pais-in").value;
+  var categoria = document.getElementById("player-cat-in") ? document.getElementById("player-cat-in").value : "mensalista";
   var pais = bandeira === "AO" ? "Angola" : "Brasil";
 
   if (!nome) {
@@ -177,6 +180,7 @@ function salvarJogador() {
       lista[idx].origem = origem;
       lista[idx].bandeira = bandeira;
       lista[idx].pais = pais;
+      lista[idx].categoria = categoria;
       lista[idx].stats = stats;
       lista[idx].ovr = ovr;
       if (fotoTempBase64 !== "") {
@@ -194,6 +198,7 @@ function salvarJogador() {
       origem: origem,
       bandeira: bandeira,
       pais: pais,
+      categoria: categoria,
       time: "IFBA Eunápolis",
       foto: fotoTempBase64,
       stats: stats,

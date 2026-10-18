@@ -10,7 +10,9 @@
  * - DEF: Defesa (Defending)
  * - FIS: Físico (Physicality)
  *
- * Nacionalidade, Origem e Equipe (ex: Porto Seguro -> Eunápolis / Angola -> IFBA)
+ * Categorias:
+ * - 'mensalista': Prioridade na titularidade e vaga no baba.
+ * - 'convidado': Participa avulso e entra primeiro na fila de revezamento.
  */
 
 var ELENCO_PADRAO = [
@@ -19,7 +21,8 @@ var ELENCO_PADRAO = [
     nome: "Victor Hugo",
     apelido: "Victor",
     posicao: "MEI",
-    perna: "R", // Right / Destro
+    perna: "R",
+    categoria: "mensalista",
     origem: "Porto Seguro",
     pais: "Brasil",
     bandeira: "BR",
@@ -34,6 +37,7 @@ var ELENCO_PADRAO = [
     apelido: "Capitão Paulo",
     posicao: "GOL",
     perna: "R",
+    categoria: "mensalista",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
@@ -47,7 +51,8 @@ var ELENCO_PADRAO = [
     nome: "Kauan Bento",
     apelido: "Bento",
     posicao: "ATA",
-    perna: "L", // Left / Canhoto
+    perna: "L",
+    categoria: "mensalista",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
@@ -62,9 +67,10 @@ var ELENCO_PADRAO = [
     apelido: "Chico",
     posicao: "ZAG",
     perna: "R",
+    categoria: "mensalista",
     origem: "Luanda",
     pais: "Angola",
-    bandeira: "AO", // Angola
+    bandeira: "AO",
     time: "IFBA Eunápolis",
     foto: "fotos/foto_4.jpg",
     stats: { rit: 68, fin: 52, pas: 66, dri: 60, def: 83, fis: 85 },
@@ -75,7 +81,8 @@ var ELENCO_PADRAO = [
     nome: "Yan Lacerda",
     apelido: "Yan",
     posicao: "ALA",
-    perna: "LR", // Ambidestro
+    perna: "LR",
+    categoria: "mensalista",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
@@ -85,11 +92,42 @@ var ELENCO_PADRAO = [
     ovr: 0
   },
   {
+    id: "j-higor",
+    nome: "Higor",
+    apelido: "Higor",
+    posicao: "MEI",
+    perna: "R",
+    categoria: "mensalista", // Entrou sexta como mensalista
+    origem: "Eunápolis",
+    pais: "Brasil",
+    bandeira: "BR",
+    time: "IFBA Eunápolis",
+    foto: "",
+    stats: { rit: 75, fin: 70, pas: 78, dri: 76, def: 60, fis: 68 },
+    ovr: 0
+  },
+  {
+    id: "j-lucas-m",
+    nome: "Lucas",
+    apelido: "Lucas",
+    posicao: "ALA",
+    perna: "L",
+    categoria: "mensalista", // Entrou sexta como mensalista
+    origem: "Eunápolis",
+    pais: "Brasil",
+    bandeira: "BR",
+    time: "IFBA Eunápolis",
+    foto: "",
+    stats: { rit: 80, fin: 68, pas: 72, dri: 74, def: 58, fis: 66 },
+    ovr: 0
+  },
+  {
     id: "j6",
     nome: "Gabriel Oliveira",
     apelido: "Muralha",
     posicao: "GOL",
     perna: "L",
+    categoria: "mensalista",
     origem: "Porto Seguro",
     pais: "Brasil",
     bandeira: "BR",
@@ -104,6 +142,7 @@ var ELENCO_PADRAO = [
     apelido: "Luquinhas",
     posicao: "ZAG",
     perna: "R",
+    categoria: "convidado",
     origem: "Itabela",
     pais: "Brasil",
     bandeira: "BR",
@@ -118,6 +157,7 @@ var ELENCO_PADRAO = [
     apelido: "Theus",
     posicao: "ALA",
     perna: "R",
+    categoria: "convidado",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
@@ -132,6 +172,7 @@ var ELENCO_PADRAO = [
     apelido: "Felipão",
     posicao: "MEI",
     perna: "R",
+    categoria: "convidado",
     origem: "Arraial d'Ajuda",
     pais: "Brasil",
     bandeira: "BR",
@@ -146,6 +187,7 @@ var ELENCO_PADRAO = [
     apelido: "Brunão",
     posicao: "ATA",
     perna: "R",
+    categoria: "convidado",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
@@ -160,6 +202,7 @@ var ELENCO_PADRAO = [
     apelido: "Flecha",
     posicao: "ALA",
     perna: "L",
+    categoria: "convidado",
     origem: "Trancoso",
     pais: "Brasil",
     bandeira: "BR",
@@ -174,6 +217,7 @@ var ELENCO_PADRAO = [
     apelido: "Xerifinho",
     posicao: "ZAG",
     perna: "R",
+    categoria: "convidado",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
@@ -189,4 +233,4 @@ ELENCO_PADRAO.forEach(function(j) {
   j.ovr = calcularOVR(j.posicao, j.stats);
 });
 
-var CHAVE_DADOS = "chicobet_jogadores_v4";
+var CHAVE_DADOS = "chicobet_jogadores_v5";

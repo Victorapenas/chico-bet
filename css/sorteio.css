@@ -363,9 +363,116 @@
   color: var(--gold);
 }
 
+/* === BANCO DE REVEZAMENTO / SUPLENTES === */
+.bench-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.bench-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+.bench-head h4 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.bench-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.bench-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+}
+
+.bench-order {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--text-on-gold);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+/* Badges de Categoria na lista de presença */
+.badge-mensalista {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.badge-convidado {
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+/* Modo de Tamanho do Time */
+.mode-picker {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.mode-btn {
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-gray);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--trans);
+}
+
+.mode-btn.active {
+  background: var(--gold);
+  color: var(--text-on-gold);
+  border-color: var(--gold);
+}
+
 .result-footer {
   display: flex;
   justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
 }
+

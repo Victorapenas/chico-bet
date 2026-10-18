@@ -113,6 +113,8 @@
 
         <div class="filter-row">
           <button class="filter-pill active" data-pos="TODOS">Todos</button>
+          <button class="filter-pill" data-pos="MENSALISTA">Mensalistas</button>
+          <button class="filter-pill" data-pos="CONVIDADO">Convidados</button>
           <button class="filter-pill" data-pos="GOL">Goleiros (GOL)</button>
           <button class="filter-pill" data-pos="ZAG">Zagueiros (ZAG)</button>
           <button class="filter-pill" data-pos="ALA">Alas (ALA)</button>
@@ -136,7 +138,14 @@
         </div>
 
         <div class="info-bar">
-          <strong>Formação Padrão:</strong> 1 Goleiro + 5 Linha. O algoritmo distribui 1 goleiro em cada time e equilibra o OVR dos atletas de linha.
+          <strong>Formação Padrão:</strong> 1 Goleiro + 5 Linha (ou 1 Goleiro + 4 Linha). O algoritmo equilibra o OVR Médio das equipes para que times com suplentes não fiquem desproporcionais ao receber reforço.
+        </div>
+
+        <!-- Seletor de Modo de Jogo -->
+        <div class="mode-picker">
+          <span style="font-size:0.85rem; font-weight:700; color:var(--text-gray); margin-right:6px;">Formato do Baba:</span>
+          <button class="mode-btn active" id="modo-6">Quadra IFBA (1 Gol + 5 Linha = 6)</button>
+          <button class="mode-btn" id="modo-5">Futsal / Society (1 Gol + 4 Linha = 5)</button>
         </div>
 
         <div class="quick-bar">
@@ -204,6 +213,9 @@
           <!-- Preenchido dinamicamente via sorteio.js -->
         </div>
 
+        <!-- Fila Oficial de Revezamento (Se houver atletas sobressalentes) -->
+        <div class="bench-section" id="bench-wrap" style="display:none;"></div>
+
         <!-- Ações do Rodapé -->
         <div class="result-footer">
           <button class="btn btn-primary btn-lg" id="btn-whats">Compartilhar Escalação no WhatsApp</button>
@@ -266,7 +278,7 @@
           </div>
         </div>
 
-        <!-- Cidade de Origem e País (Nacionalidade) -->
+        <!-- Cidade de Origem, País e Categoria -->
         <div class="form-grid">
           <div class="form-group">
             <label class="form-label" for="player-origem-in">Cidade Natal / Origem</label>
@@ -279,6 +291,14 @@
               <option value="AO">Angola (AO)</option>
             </select>
           </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="player-cat-in">Status no Baba</label>
+          <select id="player-cat-in" class="form-input">
+            <option value="mensalista" selected>Mensalista (Prioridade na Titularidade)</option>
+            <option value="convidado">Convidado / Diarista (Revezamento)</option>
+          </select>
         </div>
 
         <!-- Atributos Oficiais EA Sports FC (Escala 1 a 99) -->

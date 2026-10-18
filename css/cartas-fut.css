@@ -233,6 +233,28 @@
   border: 1px solid #d32f2f;
 }
 
+.card-cat-badge {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cat-mensalista {
+  background: rgba(46, 125, 50, 0.25);
+  color: #1b5e20;
+  border: 1px solid #2e7d32;
+}
+
+.cat-convidado {
+  background: rgba(100, 116, 139, 0.2);
+  color: #334155;
+  border: 1px solid #64748b;
+}
+
 /* === Rodapé Meta (estilo pill do FUTBIN: L | 4★ | 4★ | 87.0) === */
 .card-meta-pill {
   display: flex;

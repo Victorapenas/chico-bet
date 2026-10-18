@@ -45,7 +45,17 @@ function renderizarCartas() {
 
   // Filtragem
   var lista = jogadores.filter(function(j) {
-    var okPos = filtroPosicao === "TODOS" || j.posicao === filtroPosicao;
+    var okPos = false;
+    if (filtroPosicao === "TODOS") {
+      okPos = true;
+    } else if (filtroPosicao === "MENSALISTA") {
+      okPos = (j.categoria || "mensalista") === "mensalista";
+    } else if (filtroPosicao === "CONVIDADO") {
+      okPos = j.categoria === "convidado";
+    } else {
+      okPos = j.posicao === filtroPosicao;
+    }
+
     var okNome = filtroBusca === "" ||
       j.nome.toLowerCase().indexOf(filtroBusca) !== -1 ||
       (j.apelido && j.apelido.toLowerCase().indexOf(filtroBusca) !== -1);
@@ -102,6 +112,7 @@ function montarCartaHTML(j) {
       bandeira +
       '<span class="card-origin-tag" title="Origem: ' + origem + '">' + origem + '</span>' +
       escudo +
+      '<span class="card-cat-badge cat-' + (j.categoria || 'mensalista') + '">' + (j.categoria === 'convidado' ? 'Conv.' : 'Mensal.') + '</span>' +
     '</div>' +
     '<div class="card-meta-pill">' +
       '<span class="meta-foot">' + pernaLabel + '</span>' +
