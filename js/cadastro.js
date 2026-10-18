@@ -1,231 +1,201 @@
 /**
- * cadastro.js - Gerenciamento de Cadastro e Edição de Jogadores (RF01, RF02)
+ * cadastro.js - Cadastro e Edição de Jogadores com Avaliação por Estrelas
  * Chico B.E.T - IFBA Eunápolis
  */
 
-const CadastroManager = {
-  jogadorEmEdicaoId: null,
-  fotoBase64Temp: null,
+let idJogadorEditando = null;
+let fotoTempBase64 = "";
 
-  init() {
-    this.configurarEventosModal();
-    this.configurarSliders();
-    this.configurarUploadFoto();
-  },
+// Inicialização dos eventos do formulário e modal
+function inicializarCadastro() {
+  const modal = document.getElementById('player-modal');
+  const btnNovo = document.getElementById('btn-novo-jogador');
+  const btnNovoHero = document.getElementById('btn-novo-jogador-hero');
+  const btnFechar = document.getElementById('modal-close-btn');
+  const btnCancelar = document.getElementById('btn-cancelar-modal');
+  const form = document.getElementById('player-form');
 
-  configurarEventosModal() {
-    const modal = document.getElementById('player-modal');
-    const btnNovo = document.getElementById('btn-novo-jogador');
-    const btnNovoHero = document.getElementById('btn-novo-jogador-hero');
-    const btnFechar = document.getElementById('modal-close-btn');
-    const btnCancelar = document.getElementById('btn-cancelar-modal');
-    const form = document.getElementById('player-form');
+  if (btnNovo) btnNovo.addEventListener('click', abrirModalNovo);
+  if (btnNovoHero) btnNovoHero.addEventListener('click', abrirModalNovo);
+  if (btnFechar) btnFechar.addEventListener('click', fecharModal);
+  if (btnCancelar) btnCancelar.addEventListener('click', fecharModal);
 
-    const abrir = () => this.abrirModalCadastro();
-    if (btnNovo) btnNovo.addEventListener('click', abrir);
-    if (btnNovoHero) btnNovoHero.addEventListener('click', abrir);
-
-    const fechar = () => this.fecharModal();
-    if (btnFechar) btnFechar.addEventListener('click', fechar);
-    if (btnCancelar) btnCancelar.addEventListener('click', fechar);
-
-    // Fechar ao clicar fora
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) fechar();
-      });
-    }
-
-    // Submissão do formulário
-    if (form) {
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        this.salvarJogador();
-      });
-    }
-  },
-
-  configurarSliders() {
-    const attrs = ['vel', 'chu', 'pas', 'def', 'fis'];
-    const posicaoSelect = document.getElementById('player-posicao');
-
-    attrs.forEach(attr => {
-      const slider = document.getElementById(`attr-${attr}`);
-      const valDisplay = document.getElementById(`val-${attr}`);
-
-      if (slider && valDisplay) {
-        slider.addEventListener('input', () => {
-          valDisplay.textContent = parseFloat(slider.value).toFixed(1);
-          this.atualizarPrevisaoOverall();
-        });
-      }
+  // Fecha clicando no fundo escuro
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) fecharModal();
     });
-
-    if (posicaoSelect) {
-      posicaoSelect.addEventListener('change', () => {
-        this.atualizarPrevisaoOverall();
-      });
-    }
-  },
-
-  configurarUploadFoto() {
-    const inputFoto = document.getElementById('player-photo-input');
-    const imgPreview = document.getElementById('player-photo-preview');
-
-    if (inputFoto && imgPreview) {
-      inputFoto.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        // Limita o tamanho do arquivo a 2MB
-        if (file.size > 2 * 1024 * 1024) {
-          mostrarToast("A imagem deve ter menos de 2MB!", "warning");
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          this.fotoBase64Temp = event.target.result;
-          imgPreview.src = this.fotoBase64Temp;
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-  },
-
-  atualizarPrevisaoOverall() {
-    const posicao = document.getElementById('player-posicao').value;
-    const attrs = {
-      vel: parseFloat(document.getElementById('attr-vel').value),
-      chu: parseFloat(document.getElementById('attr-chu').value),
-      pas: parseFloat(document.getElementById('attr-pas').value),
-      def: parseFloat(document.getElementById('attr-def').value),
-      fis: parseFloat(document.getElementById('attr-fis').value),
-    };
-
-    const ovr = calcularOverall(posicao, attrs);
-    const ovrDisplay = document.getElementById('modal-overall-preview');
-    if (ovrDisplay) {
-      ovrDisplay.textContent = ovr.toFixed(1);
-    }
-  },
-
-  abrirModalCadastro() {
-    this.jogadorEmEdicaoId = null;
-    this.fotoBase64Temp = null;
-
-    document.getElementById('modal-title').textContent = "Cadastrar Novo Atleta";
-    document.getElementById('player-form').reset();
-
-    // Valores padrão médios
-    ['vel', 'chu', 'pas', 'def', 'fis'].forEach(attr => {
-      document.getElementById(`attr-${attr}`).value = 7.0;
-      document.getElementById(`val-${attr}`).textContent = "7.0";
-    });
-
-    document.getElementById('player-photo-preview').src = gerarAvatarSVG("Novo Jogador");
-    this.atualizarPrevisaoOverall();
-
-    document.getElementById('player-modal').classList.add('active');
-  },
-
-  abrirModalEdicao(id) {
-    const jogador = obterJogadores().find(j => j.id === id);
-    if (!jogador) return;
-
-    this.jogadorEmEdicaoId = id;
-    this.fotoBase64Temp = jogador.foto || null;
-
-    document.getElementById('modal-title').textContent = `Editar: ${jogador.nome}`;
-    document.getElementById('player-nome').value = jogador.nome;
-    document.getElementById('player-apelido').value = jogador.apelido || '';
-    document.getElementById('player-posicao').value = jogador.posicao;
-    document.getElementById('player-perna').value = jogador.perna || 'Destro';
-
-    ['vel', 'chu', 'pas', 'def', 'fis'].forEach(attr => {
-      const val = jogador.atributos[attr] || 5;
-      document.getElementById(`attr-${attr}`).value = val;
-      document.getElementById(`val-${attr}`).textContent = parseFloat(val).toFixed(1);
-    });
-
-    document.getElementById('player-photo-preview').src = jogador.foto || gerarAvatarSVG(jogador.nome);
-    this.atualizarPrevisaoOverall();
-
-    document.getElementById('player-modal').classList.add('active');
-  },
-
-  fecharModal() {
-    document.getElementById('player-modal').classList.remove('active');
-    this.jogadorEmEdicaoId = null;
-    this.fotoBase64Temp = null;
-  },
-
-  salvarJogador() {
-    const nome = document.getElementById('player-nome').value.trim();
-    if (!nome) {
-      mostrarToast("Informe o nome do jogador!", "warning");
-      return;
-    }
-
-    const apelido = document.getElementById('player-apelido').value.trim();
-    const posicao = document.getElementById('player-posicao').value;
-    const perna = document.getElementById('player-perna').value;
-
-    const atributos = {
-      vel: parseFloat(document.getElementById('attr-vel').value),
-      chu: parseFloat(document.getElementById('attr-chu').value),
-      pas: parseFloat(document.getElementById('attr-pas').value),
-      def: parseFloat(document.getElementById('attr-def').value),
-      fis: parseFloat(document.getElementById('attr-fis').value),
-    };
-
-    const overall = calcularOverall(posicao, atributos);
-    const foto = this.fotoBase64Temp || gerarAvatarSVG(apelido || nome);
-
-    const jogadores = obterJogadores();
-
-    if (this.jogadorEmEdicaoId) {
-      // Edição
-      const index = jogadores.findIndex(j => j.id === this.jogadorEmEdicaoId);
-      if (index !== -1) {
-        jogadores[index] = {
-          ...jogadores[index],
-          nome,
-          apelido,
-          posicao,
-          perna,
-          atributos,
-          overall,
-          foto: this.fotoBase64Temp || jogadores[index].foto || foto
-        };
-        salvarJogadores(jogadores);
-        mostrarToast(`Atleta ${nome} atualizado com sucesso!`, "success");
-      }
-    } else {
-      // Criação de novo atleta
-      const novo = {
-        id: gerarId(),
-        nome,
-        apelido,
-        posicao,
-        perna,
-        atributos,
-        overall,
-        foto
-      };
-      jogadores.unshift(novo);
-      salvarJogadores(jogadores);
-      mostrarToast(`Atleta ${nome} convocado para o elenco!`, "success");
-    }
-
-    this.fecharModal();
-
-    // Atualiza elenco e dashboard
-    if (typeof CartasManager !== 'undefined') {
-      CartasManager.renderizarElenco();
-    }
-    if (typeof atualizarEstatisticasDashboard === 'function') {
-      atualizarEstatisticasDashboard();
-    }
   }
-};
+
+  // Atualização em tempo real das estrelas nos sliders
+  const sliders = ['vel', 'chu', 'pas', 'dri', 'def', 'fis'];
+  sliders.forEach(s => {
+    const input = document.getElementById(`attr-${s}`);
+    const display = document.getElementById(`val-${s}`);
+    if (input && display) {
+      input.addEventListener('input', () => {
+        display.textContent = parseFloat(input.value).toFixed(1);
+        atualizarPrevisaoEstrelas();
+      });
+    }
+  });
+
+  const selectPos = document.getElementById('player-posicao');
+  if (selectPos) {
+    selectPos.addEventListener('change', atualizarPrevisaoEstrelas);
+  }
+
+  // Upload simples de foto
+  const inputFoto = document.getElementById('player-photo-input');
+  if (inputFoto) {
+    inputFoto.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const leitor = new FileReader();
+        leitor.onload = (evento) => {
+          fotoTempBase64 = evento.target.result;
+          document.getElementById('player-photo-preview').src = fotoTempBase64;
+        };
+        leitor.readAsDataURL(file);
+      }
+    });
+  }
+
+  // Salvar formulário
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      salvarDadosJogador();
+    });
+  }
+}
+
+// Atualiza o display das estrelas no topo do modal
+function atualizarPrevisaoEstrelas() {
+  const pos = document.getElementById('player-posicao').value;
+  const skills = {
+    vel: parseFloat(document.getElementById('attr-vel').value) || 3,
+    chu: parseFloat(document.getElementById('attr-chu').value) || 3,
+    pas: parseFloat(document.getElementById('attr-pas').value) || 3,
+    dri: parseFloat(document.getElementById('attr-dri').value) || 3,
+    def: parseFloat(document.getElementById('attr-def').value) || 3,
+    fis: parseFloat(document.getElementById('attr-fis').value) || 3,
+  };
+
+  const estrelas = calcularEstrelas(pos, skills);
+  const display = document.getElementById('modal-overall-preview');
+  if (display) {
+    display.textContent = estrelas.toFixed(1) + " ⭐";
+  }
+}
+
+// Abrir modal limpo para novo atleta
+function abrirModalNovo() {
+  idJogadorEditando = null;
+  fotoTempBase64 = "";
+
+  document.getElementById('modal-title').textContent = "Cadastrar Atleta do IFBA";
+  document.getElementById('player-form').reset();
+  document.getElementById('player-photo-preview').src = obterFotoJogador("");
+
+  ['vel', 'chu', 'pas', 'dri', 'def', 'fis'].forEach(s => {
+    document.getElementById(`attr-${s}`).value = 3.5;
+    document.getElementById(`val-${s}`).textContent = "3.5";
+  });
+
+  atualizarPrevisaoEstrelas();
+  document.getElementById('player-modal').classList.add('active');
+}
+
+// Abrir modal preenchido para edição
+function abrirEdicaoJogador(id) {
+  const lista = obterJogadores();
+  const jogador = lista.find(j => j.id === id);
+  if (!jogador) return;
+
+  idJogadorEditando = id;
+  fotoTempBase64 = jogador.foto || "";
+
+  document.getElementById('modal-title').textContent = `Editar: ${jogador.nome}`;
+  document.getElementById('player-nome').value = jogador.nome;
+  document.getElementById('player-apelido').value = jogador.apelido || "";
+  document.getElementById('player-posicao').value = jogador.posicao;
+  document.getElementById('player-perna').value = jogador.perna || "Destro";
+  document.getElementById('player-photo-preview').src = obterFotoJogador(jogador.foto);
+
+  ['vel', 'chu', 'pas', 'dri', 'def', 'fis'].forEach(s => {
+    const val = jogador.skills[s] || 3;
+    document.getElementById(`attr-${s}`).value = val;
+    document.getElementById(`val-${s}`).textContent = parseFloat(val).toFixed(1);
+  });
+
+  atualizarPrevisaoEstrelas();
+  document.getElementById('player-modal').classList.add('active');
+}
+
+function fecharModal() {
+  document.getElementById('player-modal').classList.remove('active');
+  idJogadorEditando = null;
+  fotoTempBase64 = "";
+}
+
+// Salva o atleta no LocalStorage
+function salvarDadosJogador() {
+  const nome = document.getElementById('player-nome').value.trim();
+  const apelido = document.getElementById('player-apelido').value.trim();
+  const posicao = document.getElementById('player-posicao').value;
+  const perna = document.getElementById('player-perna').value;
+
+  if (!nome) {
+    alert("Por favor, digite o nome do jogador!");
+    return;
+  }
+
+  const skills = {
+    vel: parseFloat(document.getElementById('attr-vel').value) || 3,
+    chu: parseFloat(document.getElementById('attr-chu').value) || 3,
+    pas: parseFloat(document.getElementById('attr-pas').value) || 3,
+    dri: parseFloat(document.getElementById('attr-dri').value) || 3,
+    def: parseFloat(document.getElementById('attr-def').value) || 3,
+    fis: parseFloat(document.getElementById('attr-fis').value) || 3,
+  };
+
+  const estrelas = calcularEstrelas(posicao, skills);
+  let lista = obterJogadores();
+
+  if (idJogadorEditando) {
+    // Edição de jogador existente
+    const index = lista.findIndex(j => j.id === idJogadorEditando);
+    if (index !== -1) {
+      lista[index].nome = nome;
+      lista[index].apelido = apelido;
+      lista[index].posicao = posicao;
+      lista[index].perna = perna;
+      lista[index].skills = skills;
+      lista[index].estrelas = estrelas;
+      if (fotoTempBase64 !== "") {
+        lista[index].foto = fotoTempBase64;
+      }
+      mostrarNotificacao(`Atleta ${nome} atualizado!`);
+    }
+  } else {
+    // Novo cadastro
+    const novo = {
+      id: "jog-" + Date.now(),
+      nome: nome,
+      apelido: apelido,
+      posicao: posicao,
+      perna: perna,
+      foto: fotoTempBase64,
+      skills: skills,
+      estrelas: estrelas
+    };
+    lista.unshift(novo);
+    mostrarNotificacao(`Atleta ${nome} cadastrado!`);
+  }
+
+  salvarJogadores(lista);
+  fecharModal();
+  renderizarCatalogoCartas();
+  atualizarDashboard();
+}

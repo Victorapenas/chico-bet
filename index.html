@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chico B.E.T - Sorteio de Pelada & Cartas FUT</title>
+  <title>Chico B.E.T - O Baba da Quadra do IFBA Eunápolis</title>
   
-  <!-- Fontes Google (Inter & Rajdhani para visual FIFA/FUT) -->
+  <!-- Fontes Google -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
   
   <!-- CSS Modular -->
   <link rel="stylesheet" href="css/variaveis.css">
@@ -20,15 +20,15 @@
 </head>
 <body>
 
-  <!-- Header & Navbar Fixa -->
+  <!-- Header / Navbar Institucional IFBA -->
   <header class="app-header">
     <div class="app-container">
       <div class="header-content">
-        <a href="#dashboard" class="logo-area" data-nav="dashboard">
+        <a href="javascript:void(0)" class="logo-area" onclick="trocarTela('dashboard')">
           <div class="logo-icon">⚽</div>
           <div class="logo-text">
             <h1>Chico <span>B.E.T</span></h1>
-            <span class="logo-tag">IFBA EUNÁPOLIS • ADS</span>
+            <span class="logo-tag">IFBA EUNÁPOLIS • O BABA DA QUADRA</span>
           </div>
         </a>
 
@@ -55,22 +55,25 @@
     </div>
   </header>
 
-  <!-- Container Principal das Views (SPA) -->
+  <!-- Container Principal das Telas (SPA) -->
   <main class="app-container">
 
     <!-- 1. TELA INICIAL (DASHBOARD) -->
     <section id="view-dashboard" class="view-section active">
       <div class="hero-card">
-        <h2 class="hero-title">Sorteio Justo & Resenha Garantida</h2>
+        <div style="display: inline-block; background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; color: #4ade80; font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-bottom: 12px;">
+          📍 Quadra Poliesportiva do IFBA Eunápolis
+        </div>
+        <h2 class="hero-title">Sorteador Oficial do Baba do IFBA</h2>
         <p class="hero-subtitle">
-          Plataforma esportiva interativa para equilibrar partidas de futebol amador com cartas personalizadas estilo FIFA Ultimate Team e algoritmo automático de divisão por Overall.
+          Organize o baba com a galera! O sistema qualifica cada atleta por <strong>nível de estrelas (1 a 5 ⭐)</strong> e divide os times automaticamente na regra da nossa quadra: <strong>1 no gol e 5 na linha</strong>, com campinho tático estilo 7a0.
         </p>
         <div class="hero-actions">
-          <button class="btn btn-primary btn-lg" data-nav="sorteio-setup">
-            <span>⚽</span> Configurar & Sortear Partida
+          <button class="btn btn-primary btn-lg" onclick="trocarTela('sorteio-setup')">
+            <span>⚽</span> Sortear Baba Agora
           </button>
-          <button class="btn btn-secondary btn-lg" data-nav="elenco">
-            <span>🎴</span> Ver Elenco & Cartas
+          <button class="btn btn-secondary btn-lg" onclick="trocarTela('elenco')">
+            <span>🎴</span> Ver Elenco & Estrelas
           </button>
           <button class="btn btn-accent btn-lg" id="btn-novo-jogador-hero">
             <span>➕</span> Cadastrar Atleta
@@ -78,27 +81,36 @@
         </div>
       </div>
 
-      <!-- Estatísticas Rápidas do Elenco -->
-      <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 14px;">📊 Panorama do Elenco</h3>
+      <!-- Regra da Quadra em Destaque -->
+      <div class="ifba-banner-info">
+        <div class="banner-icon">📋</div>
+        <div>
+          <h4>Regra da Partida: 6 Atletas por Equipe</h4>
+          <p>Para o jogo fluir bem na quadra do campus, cada time é escalado com <strong>1 Goleiro + 5 Jogadores de Linha</strong> (2 na zaga, 2 nas alas e 1 pivô no ataque).</p>
+        </div>
+      </div>
+
+      <!-- Métricas Rápidas do Elenco -->
+      <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 14px;">📊 Números do Elenco do IFBA</h3>
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-icon">👥</div>
           <div class="stat-info">
             <div class="stat-num" id="dash-count-total">0</div>
-            <div class="stat-label">Jogadores Cadastrados</div>
+            <div class="stat-label">Atletas Cadastrados</div>
           </div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon" style="color: var(--accent-gold); background: rgba(245, 158, 11, 0.1);">⭐</div>
+          <div class="stat-icon" style="color: #facc15; background: rgba(250, 204, 21, 0.1);">⭐</div>
           <div class="stat-info">
-            <div class="stat-num" id="dash-count-media">0.0</div>
-            <div class="stat-label">Overall Médio Geral</div>
+            <div class="stat-num" id="dash-count-media">0.0 ⭐</div>
+            <div class="stat-label">Nível Médio do Baba</div>
           </div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon" style="color: var(--accent-red); background: rgba(239, 68, 68, 0.1);">🧤</div>
+          <div class="stat-icon" style="color: #ef4444; background: rgba(239, 68, 68, 0.1);">🧤</div>
           <div class="stat-info">
             <div class="stat-num" id="dash-count-goleiros">0</div>
             <div class="stat-label">Goleiros no Elenco</div>
@@ -106,20 +118,20 @@
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon" style="color: var(--accent-green); background: rgba(0, 230, 118, 0.1);">🎯</div>
+          <div class="stat-icon" style="color: #22c55e; background: rgba(34, 197, 94, 0.1);">🏃</div>
           <div class="stat-info">
             <div class="stat-num" id="dash-count-atacantes">0</div>
-            <div class="stat-label">Artilheiros / Atacantes</div>
+            <div class="stat-label">Jogadores de Linha</div>
           </div>
         </div>
       </div>
 
-      <!-- Atalhos de Ação Rápida -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-        <button class="btn btn-outline btn-sm" id="btn-reset-factory" title="Restaura os jogadores iniciais da turma">
-          🔄 Restaurar Elenco Padrão IFBA
+      <!-- Ações de Apoio -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; flex-wrap: wrap; gap: 10px;">
+        <button class="btn btn-outline btn-sm" id="btn-reset-factory" title="Restaura os atletas originais do IFBA com fotos">
+          🔄 Restaurar Elenco Original da Turma
         </button>
-        <span style="font-size: 0.8rem; color: var(--text-dim);">💾 Dados salvos automaticamente no navegador</span>
+        <span style="font-size: 0.8rem; color: var(--text-dim);">💾 Dados salvos no seu navegador (LocalStorage)</span>
       </div>
     </section>
 
@@ -127,60 +139,55 @@
     <section id="view-elenco" class="view-section">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
         <div>
-          <h2 style="font-size: 1.8rem; font-weight: 800;">Galeria de Cartas FUT</h2>
-          <p style="color: var(--text-muted); font-size: 0.92rem;">Visualize, busque e gerencie as cartas dos atletas do baba.</p>
+          <h2 style="font-size: 1.8rem; font-weight: 800;">Cartas dos Atletas do IFBA</h2>
+          <p style="color: var(--text-muted); font-size: 0.92rem;">Avaliação por estrelas (1 a 5 ⭐) com fotos reais e habilidades da pelada.</p>
         </div>
         <button class="btn btn-primary" id="btn-novo-jogador">
-          <span>➕</span> Novo Atleta
+          <span>➕</span> Cadastrar Atleta
         </button>
       </div>
 
-      <!-- Barra de Filtros e Busca (RF01, Figura 3) -->
+      <!-- Filtros e Busca -->
       <div class="filters-bar">
         <div class="search-box">
           <span class="search-icon">🔍</span>
-          <input type="text" id="search-player-input" placeholder="Buscar jogador por nome ou apelido...">
+          <input type="text" id="search-player-input" placeholder="Buscar por nome ou apelido no baba...">
         </div>
 
         <div class="filter-chips">
           <button class="chip-btn active" data-pos="TODOS">Todos</button>
           <button class="chip-btn" data-pos="GOL">🧤 Goleiros</button>
-          <button class="chip-btn" data-pos="ZAG">🛡️ Zagueiros</button>
-          <button class="chip-btn" data-pos="MEI">⚡ Meio-Campo</button>
-          <button class="chip-btn" data-pos="ATA">🎯 Atacantes</button>
+          <button class="chip-btn" data-pos="ZAG">🛡️ Zagueiros / Fixos</button>
+          <button class="chip-btn" data-pos="ALA">⚡ Alas / Laterais</button>
+          <button class="chip-btn" data-pos="MEI">👟 Meio-Campo</button>
+          <button class="chip-btn" data-pos="ATA">🎯 Atacantes / Pivôs</button>
         </div>
       </div>
 
-      <!-- Grid com as Cartas FUT -->
+      <!-- Grid com as Cartas de Estrelas -->
       <div class="cards-grid" id="cards-grid-container">
         <!-- Renderizado dinamicamente via cartas.js -->
       </div>
     </section>
 
-    <!-- 3. TELA DE SETUP E SORTEIO (RF03, Figura 4) -->
+    <!-- 3. TELA DE SETUP E SORTEIO -->
     <section id="view-sorteio-setup" class="view-section">
       <div class="setup-container">
         <div style="margin-bottom: 20px;">
-          <h2 style="font-size: 1.8rem; font-weight: 800;">Setup do Sorteio</h2>
-          <p style="color: var(--text-muted); font-size: 0.92rem;">Marque os jogadores presentes no baba e ajuste a formação das equipes.</p>
+          <h2 style="font-size: 1.8rem; font-weight: 800;">Lista de Presença do Baba</h2>
+          <p style="color: var(--text-muted); font-size: 0.92rem;">Marque quem confirmou presença no baba de hoje na quadra do IFBA.</p>
         </div>
 
-        <!-- Seletor de Atletas por Equipe -->
-        <div class="team-size-picker">
+        <!-- Regra de 6 Jogadores -->
+        <div class="ifba-banner-info">
+          <div class="banner-icon">⚖️</div>
           <div>
-            <div style="font-weight: 700; font-size: 1rem; margin-bottom: 4px;">Atletas por Equipe:</div>
-            <div style="font-size: 0.85rem; color: var(--text-muted);">Tamanho ideal para futebol society, futsal ou campo</div>
-          </div>
-          <div class="team-size-options">
-            <button class="size-pill" data-size="4">4</button>
-            <button class="size-pill" data-size="5">5</button>
-            <button class="size-pill active" data-size="6">6</button>
-            <button class="size-pill" data-size="7">7</button>
-            <button class="size-pill" data-size="8">8</button>
+            <h4>Distribuição Proporcional de Goleiros e Estrelas</h4>
+            <p>O algoritmo garante 1 goleiro em cada equipe e equilibra a média de estrelas dos jogadores de linha.</p>
           </div>
         </div>
 
-        <!-- Toolbar de Seleção Rápida -->
+        <!-- Toolbar de Seleção -->
         <div class="setup-toolbar">
           <div class="setup-stats">
             <span>Confirmados:</span>
@@ -193,34 +200,32 @@
           </div>
         </div>
 
-        <!-- Lista com Checkboxes de Presença -->
+        <!-- Lista de Presença com Checkboxes -->
         <div class="attendance-list" id="attendance-list-container">
           <!-- Renderizado dinamicamente via sorteio.js -->
         </div>
 
-        <!-- Botão Principal de Sorteio -->
-        <div style="margin-top: 24px;">
+        <!-- Botão de Sorteio -->
+        <div style="margin-top: 20px;">
           <button class="btn btn-primary btn-lg btn-block" id="btn-executar-sorteio" style="font-size: 1.15rem; padding: 16px;">
-            <span>🎲</span> SORTEAR TIMES EQUILIBRADOS
+            <span>🎲</span> SORTEAR EQUIPES EQUILIBRADAS
           </button>
         </div>
       </div>
     </section>
 
-    <!-- 4. TELA DE RESULTADOS (RF03, RNF02, Figura 5) -->
+    <!-- 4. TELA DE RESULTADOS & CAMPO TÁTICO ESTILO 7A0 -->
     <section id="view-sorteio-resultado" class="view-section">
       <div class="results-container">
-        <!-- Banner de Equilíbrio e Métricas -->
-        <div class="results-header-banner">
-          <div class="balance-status">
-            <div class="balance-status-icon">🏆</div>
-            <div class="balance-status-text" id="balance-summary-text">
-              <h4>Equilíbrio Garantido</h4>
-              <p>Times divididos de forma justa alocando goleiros proporcionalmente.</p>
-            </div>
-          </div>
-          <div style="display: flex; gap: 10px;">
-            <button class="btn btn-secondary btn-sm" data-nav="sorteio-setup">
+        <!-- Banner de Equilíbrio -->
+        <div class="ifba-banner-info" id="balance-summary-text" style="margin-bottom: 20px;">
+          <!-- Preenchido dinamicamente -->
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+          <h3 style="font-size: 1.3rem; font-weight: 800;">🏟️ Campo Tático da Quadra (Estilo 7a0)</h3>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary btn-sm" onclick="trocarTela('sorteio-setup')">
               <span>⚙️</span> Ajustar Presença
             </button>
             <button class="btn btn-accent btn-sm" id="btn-refazer-sorteio">
@@ -229,23 +234,43 @@
           </div>
         </div>
 
-        <!-- Campinho Tático 2D Ilustrativo -->
-        <div class="field-view" id="tactical-field-preview">
+        <!-- Abas para alternar qual time ver posicionado no campo -->
+        <div class="field-team-tabs" id="field-team-tabs-container">
           <!-- Renderizado dinamicamente via sorteio.js -->
         </div>
 
-        <!-- Grid de Times Formados -->
-        <div class="teams-grid" id="teams-grid-container">
+        <!-- O CAMPO TÁTICO 7A0 COM AS FOTOS REAIS DOS ALUNOS -->
+        <div class="field-7a0-wrapper">
+          <div class="field-7a0-pitch">
+            <!-- Linhas do Campo -->
+            <div class="pitch-half-line"></div>
+            <div class="pitch-center-circle"></div>
+            <div class="pitch-center-spot"></div>
+
+            <div class="pitch-penalty-area-top"></div>
+            <div class="pitch-penalty-area-bottom"></div>
+            <div class="pitch-goal-area-bottom"></div>
+
+            <!-- Slots dos 6 Atletas (1 Goleiro + 5 Linha) -->
+            <div id="field-pitch-slots">
+              <!-- Renderizado dinamicamente com as fotos e estrelas -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumo dos Times em Cards -->
+        <h4 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 12px;">📋 Escalação Completa dos Times</h4>
+        <div class="teams-cards-summary" id="teams-cards-summary-container">
           <!-- Renderizado dinamicamente via sorteio.js -->
         </div>
 
-        <!-- Ações no Rodapé dos Resultados -->
-        <div class="results-actions-footer">
+        <!-- Ações do Rodapé -->
+        <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 10px;">
           <button class="btn btn-primary btn-lg" id="btn-compartilhar-whatsapp">
             <span>📱</span> Compartilhar Escalação no WhatsApp
           </button>
-          <button class="btn btn-secondary btn-lg" data-nav="elenco">
-            <span>🎴</span> Ver Cartas do Elenco
+          <button class="btn btn-secondary btn-lg" onclick="trocarTela('elenco')">
+            <span>🎴</span> Ver Todas as Cartas
           </button>
         </div>
       </div>
@@ -253,26 +278,26 @@
 
   </main>
 
-  <!-- MODAL DE CADASTRO E EDIÇÃO DE JOGADOR (RF01, RF02) -->
+  <!-- MODAL DE CADASTRO E EDIÇÃO (ESTRELAS DE 1 A 5) -->
   <div class="modal-overlay" id="player-modal">
     <div class="modal-box">
       <div class="modal-header">
-        <h3 id="modal-title">Cadastrar Novo Atleta</h3>
+        <h3 id="modal-title">Cadastrar Atleta do IFBA</h3>
         <button class="modal-close-btn" id="modal-close-btn">&times;</button>
       </div>
 
       <form id="player-form">
         <!-- Preview da Foto e Upload -->
         <div class="photo-uploader">
-          <img src="" alt="Preview" class="photo-preview" id="player-photo-preview">
+          <img src="" alt="Foto" class="photo-preview" id="player-photo-preview">
           <div class="photo-controls">
-            <label class="form-label" style="margin-bottom: 2px;">Foto do Atleta:</label>
+            <label class="form-label" style="margin-bottom: 2px;">Foto Real do Atleta:</label>
             <input type="file" id="player-photo-input" accept="image/*" class="form-control" style="font-size: 0.8rem; padding: 6px;">
-            <span style="font-size: 0.72rem; color: var(--text-dim);">Dica: você pode subir uma foto ou deixar que o sistema gere um avatar com suas iniciais.</span>
+            <span style="font-size: 0.72rem; color: var(--text-dim);">Dica: se não tiver foto agora, pode deixar sem foto que o sistema coloca a silhueta neutra.</span>
           </div>
         </div>
 
-        <!-- Dados Básicos -->
+        <!-- Dados do Atleta -->
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="player-nome">Nome Completo *</label>
@@ -280,8 +305,8 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="player-apelido">Apelido na Pelada</label>
-            <input type="text" id="player-apelido" class="form-control" placeholder="Ex: Camisa 10">
+            <label class="form-label" for="player-apelido">Apelido na Quadra</label>
+            <input type="text" id="player-apelido" class="form-control" placeholder="Ex: Victor">
           </div>
         </div>
 
@@ -290,9 +315,10 @@
             <label class="form-label" for="player-posicao">Posição Principal</label>
             <select id="player-posicao" class="form-control">
               <option value="GOL">🧤 Goleiro (GOL)</option>
-              <option value="ZAG">🛡️ Zagueiro / Defensor (ZAG)</option>
-              <option value="MEI" selected>⚡ Meio-Campo (MEI)</option>
-              <option value="ATA">🎯 Atacante (ATA)</option>
+              <option value="ZAG">🛡️ Zagueiro / Fixo (ZAG)</option>
+              <option value="ALA">⚡ Ala / Lateral (ALA)</option>
+              <option value="MEI" selected>👟 Meio-Campo (MEI)</option>
+              <option value="ATA">🎯 Atacante / Pivô (ATA)</option>
             </select>
           </div>
 
@@ -306,47 +332,53 @@
           </div>
         </div>
 
-        <!-- Parametrização de Atributos com Sliders (RF02) -->
+        <!-- Parametrização por Estrelas (1 a 5) -->
         <div class="attributes-section">
           <div class="attributes-header">
             <div>
-              <span style="font-weight: 700; font-size: 0.95rem;">Atributos Técnicos (1 a 10)</span>
-              <div style="font-size: 0.75rem; color: var(--text-dim);">Ponderado automaticamente pela posição</div>
+              <span style="font-weight: 700; font-size: 0.95rem;">Habilidades da Pelada (1.0 a 5.0 ⭐)</span>
+              <div style="font-size: 0.75rem; color: var(--text-dim);">Notas realistas para quem joga no baba</div>
             </div>
             <div class="overall-preview-box">
-              <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">OVERALL:</span>
-              <span class="overall-preview-num" id="modal-overall-preview">7.5</span>
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">NÍVEL:</span>
+              <span class="overall-preview-num" id="modal-overall-preview" style="color: #facc15;">3.5 ⭐</span>
             </div>
           </div>
 
           <div class="attr-slider-row">
             <span class="attr-name">⚡ Velocidade</span>
-            <input type="range" min="1" max="10" step="0.5" value="7" class="attr-slider" id="attr-vel">
-            <span class="attr-val" id="val-vel">7.0</span>
+            <input type="range" min="1" max="5" step="0.5" value="3.5" class="attr-slider" id="attr-vel">
+            <span class="attr-val" id="val-vel">3.5</span>
           </div>
 
           <div class="attr-slider-row">
-            <span class="attr-name">🎯 Chute</span>
-            <input type="range" min="1" max="10" step="0.5" value="7" class="attr-slider" id="attr-chu">
-            <span class="attr-val" id="val-chu">7.0</span>
+            <span class="attr-name">🎯 Finalização</span>
+            <input type="range" min="1" max="5" step="0.5" value="3.5" class="attr-slider" id="attr-chu">
+            <span class="attr-val" id="val-chu">3.5</span>
           </div>
 
           <div class="attr-slider-row">
             <span class="attr-name">👟 Passe</span>
-            <input type="range" min="1" max="10" step="0.5" value="7" class="attr-slider" id="attr-pas">
-            <span class="attr-val" id="val-pas">7.0</span>
+            <input type="range" min="1" max="5" step="0.5" value="3.5" class="attr-slider" id="attr-pas">
+            <span class="attr-val" id="val-pas">3.5</span>
           </div>
 
           <div class="attr-slider-row">
-            <span class="attr-name">🛡️ Defesa</span>
-            <input type="range" min="1" max="10" step="0.5" value="7" class="attr-slider" id="attr-def">
-            <span class="attr-val" id="val-def">7.0</span>
+            <span class="attr-name">🌀 Drible</span>
+            <input type="range" min="1" max="5" step="0.5" value="3.5" class="attr-slider" id="attr-dri">
+            <span class="attr-val" id="val-dri">3.5</span>
           </div>
 
           <div class="attr-slider-row">
-            <span class="attr-name">💪 Físico</span>
-            <input type="range" min="1" max="10" step="0.5" value="7" class="attr-slider" id="attr-fis">
-            <span class="attr-val" id="val-fis">7.0</span>
+            <span class="attr-name">🛡️ Marcação</span>
+            <input type="range" min="1" max="5" step="0.5" value="3.5" class="attr-slider" id="attr-def">
+            <span class="attr-val" id="val-def">3.5</span>
+          </div>
+
+          <div class="attr-slider-row">
+            <span class="attr-name">💪 Força</span>
+            <input type="range" min="1" max="5" step="0.5" value="3.5" class="attr-slider" id="attr-fis">
+            <span class="attr-val" id="val-fis">3.5</span>
           </div>
         </div>
 
@@ -360,7 +392,7 @@
     </div>
   </div>
 
-  <!-- Footer com Identificação Acadêmica -->
+  <!-- Footer Acadêmico -->
   <footer class="app-footer">
     <div class="app-container">
       <div class="footer-content">
@@ -369,13 +401,13 @@
         </div>
         <div class="footer-creators">
           <strong>Instituto Federal da Bahia (IFBA) campus Eunápolis</strong> | ADS — 4º Semestre<br>
-          Docente: Ana Cristina Linhares | Equipe: Victor Hugo, Paulo Amaral, Kauan Bento, Francisco António e Yan Lacerda.
+          Docente: Ana Cristina Linhares | Discentes: Victor Hugo Santana, Paulo Amaral, Kauan Bento, Francisco António e Yan Lacerda.
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- Scripts Modulares JS -->
+  <!-- Scripts -->
   <script src="js/dados.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/navegacao.js"></script>

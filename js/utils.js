@@ -1,111 +1,96 @@
 /**
- * utils.js - Funções Utilitárias, Cálculo de Overall e LocalStorage
+ * utils.js - Funções de Apoio Simples e Diretas
  * Chico B.E.T - IFBA Eunápolis
  */
 
-// Cálculo automático do Overall ponderado por posição (RF02)
-function calcularOverall(posicao, { vel = 5, chu = 5, pas = 5, def = 5, fis = 5 }) {
-  vel = parseFloat(vel) || 5;
-  chu = parseFloat(chu) || 5;
-  pas = parseFloat(pas) || 5;
-  def = parseFloat(def) || 5;
-  fis = parseFloat(fis) || 5;
+// 1. Cálculo da nota geral em Estrelas (1.0 a 5.0)
+function calcularEstrelas(posicao, skills) {
+  const vel = parseFloat(skills.vel) || 3;
+  const chu = parseFloat(skills.chu) || 3;
+  const pas = parseFloat(skills.pas) || 3;
+  const def = parseFloat(skills.def) || 3;
+  const fis = parseFloat(skills.fis) || 3;
+  const dri = parseFloat(skills.dri) || 3;
 
-  let ovr = 0;
+  let media = 0;
 
-  switch (posicao) {
-    case 'GOL':
-      // Goleiro prioriza Defesa e Físico
-      ovr = (def * 0.45) + (fis * 0.30) + (pas * 0.15) + (vel * 0.10);
-      break;
-
-    case 'ZAG':
-      // Zagueiro prioriza Defesa, Físico e Velocidade
-      ovr = (def * 0.40) + (fis * 0.30) + (vel * 0.15) + (pas * 0.10) + (chu * 0.05);
-      break;
-
-    case 'MEI':
-      // Meio-Campo prioriza Passe, Velocidade e Chute
-      ovr = (pas * 0.35) + (vel * 0.20) + (chu * 0.20) + (fis * 0.15) + (def * 0.10);
-      break;
-
-    case 'ATA':
-      // Atacante prioriza Chute, Velocidade e Físico
-      ovr = (chu * 0.40) + (vel * 0.30) + (fis * 0.15) + (pas * 0.10) + (def * 0.05);
-      break;
-
-    default:
-      // Média aritmética simples padrão
-      ovr = (vel + chu + pas + def + fis) / 5;
+  // Leve ponderação de acordo com a posição da quadra
+  if (posicao === 'GOL') {
+    media = (def * 0.4) + (fis * 0.3) + (pas * 0.15) + (vel * 0.15);
+  } else if (posicao === 'ZAG') {
+    media = (def * 0.35) + (fis * 0.25) + (pas * 0.15) + (vel * 0.15) + (dri * 0.1);
+  } else if (posicao === 'ATA') {
+    media = (chu * 0.35) + (vel * 0.25) + (dri * 0.2) + (fis * 0.1) + (pas * 0.1);
+  } else {
+    // Meio-Campo e Ala
+    media = (pas * 0.25) + (dri * 0.25) + (vel * 0.2) + (chu * 0.15) + (def * 0.15);
   }
 
-  // Retorna com 1 casa decimal (ex: 8.4)
-  return Math.round(ovr * 10) / 10;
+  // Limita entre 1.0 e 5.0 com 1 casa decimal
+  const finalScore = Math.max(1, Math.min(5, media));
+  return Math.round(finalScore * 10) / 10;
 }
 
-// Obter tier da carta com base no Overall para estilização FUT
-function obterTierCarta(overall) {
-  const ovr = parseFloat(overall);
-  if (ovr >= 8.5) return 'tier-special';
-  if (ovr >= 7.8) return 'tier-gold';
-  if (ovr >= 6.8) return 'tier-silver';
-  return 'tier-bronze';
+// 2. Renderização visual das estrelinhas (ex: ⭐⭐⭐⭐☆)
+function renderizarEstrelasVisual(nota) {
+  const notaNum = parseFloat(nota) || 0;
+  const estrelasCheias = Math.floor(notaNum);
+  const temMeia = (notaNum - estrelasCheias) >= 0.4;
+  let html = '';
+
+  for (let i = 0; i < estrelasCheias; i++) {
+    html += '<span class="star filled">★</span>';
+  }
+  if (temMeia && estrelasCheias < 5) {
+    html += '<span class="star half">★</span>';
+  }
+  const vazias = 5 - estrelasCheias - (temMeia ? 1 : 0);
+  for (let i = 0; i < vazias; i++) {
+    html += '<span class="star empty">☆</span>';
+  }
+
+  return html;
 }
 
-// Gerenciamento de LocalStorage
+// 3. Obter jogadores do LocalStorage
 function obterJogadores() {
+  const dados = localStorage.getItem(CHAVE_STORAGE);
+  if (!dados) {
+    salvarJogadores(ELENCO_INICIAL);
+    return [...ELENCO_INICIAL];
+  }
   try {
-    const raw = localStorage.getItem(STORAGE_KEYS.JOGADORES);
-    if (!raw) {
-      salvarJogadores(ELENCO_INICIAL);
-      return [...ELENCO_INICIAL];
-    }
-    return JSON.parse(raw);
-  } catch (err) {
-    console.error("Erro ao ler do LocalStorage:", err);
+    return JSON.parse(dados);
+  } catch (e) {
     return [...ELENCO_INICIAL];
   }
 }
 
-function salvarJogadores(jogadores) {
-  try {
-    localStorage.setItem(STORAGE_KEYS.JOGADORES, JSON.stringify(jogadores));
-  } catch (err) {
-    console.error("Erro ao salvar no LocalStorage:", err);
+// 4. Salvar jogadores no LocalStorage
+function salvarJogadores(lista) {
+  localStorage.setItem(CHAVE_STORAGE, JSON.stringify(lista));
+}
+
+// 5. Placeholder neutro para quem está sem foto
+function obterFotoJogador(caminhoFoto) {
+  if (caminhoFoto && caminhoFoto.trim() !== "") {
+    return caminhoFoto;
   }
+  // Silhueta simples e neutra em SVG inline
+  return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%2394a3b8"><circle cx="50" cy="35" r="22"/><path d="M15 88 C15 62 85 62 85 88 Z"/></svg>';
 }
 
-function resetarElencoPadrao() {
-  salvarJogadores(ELENCO_INICIAL);
-  return [...ELENCO_INICIAL];
-}
-
-// Gerador de ID único simples
-function gerarId() {
-  return 'jog-' + Date.now().toString(36) + '-' + Math.random().toString(36).substr(2, 5);
-}
-
-// Sistema de Notificações Toast
-function mostrarToast(mensagem, tipo = 'info') {
-  let container = document.querySelector('.toast-container');
-  if (!container) {
-    container = document.createElement('div');
-    container.className = 'toast-container';
-    document.body.appendChild(container);
+// 6. Mensagem rápida na tela (Toast)
+function mostrarNotificacao(texto) {
+  let box = document.getElementById('notificacao-toast');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'notificacao-toast';
+    document.body.appendChild(box);
   }
-
-  const toast = document.createElement('div');
-  toast.className = `toast toast-${tipo}`;
-
-  const icon = tipo === 'success' ? '✅' : tipo === 'warning' ? '⚠️' : tipo === 'error' ? '❌' : 'ℹ️';
-  toast.innerHTML = `<span>${icon}</span> <span>${mensagem}</span>`;
-
-  container.appendChild(toast);
-
+  box.textContent = texto;
+  box.className = 'toast show';
   setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transform = 'translateY(10px)';
-    toast.style.transition = 'all 0.3s ease';
-    setTimeout(() => toast.remove(), 300);
-  }, 3200);
+    box.className = 'toast';
+  }, 3000);
 }
