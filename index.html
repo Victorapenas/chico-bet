@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chico B.E.T - Sorteio de Pelada & Cartas FUT</title>
+  
+  <!-- Fontes Google (Inter & Rajdhani para visual FIFA/FUT) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS Modular -->
+  <link rel="stylesheet" href="css/variaveis.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/componentes.css">
+  <link rel="stylesheet" href="css/cartas-fut.css">
+  <link rel="stylesheet" href="css/sorteio.css">
+  <link rel="stylesheet" href="css/responsivo.css">
+</head>
+<body>
+
+  <!-- Header & Navbar Fixa -->
+  <header class="app-header">
+    <div class="app-container">
+      <div class="header-content">
+        <a href="#dashboard" class="logo-area" data-nav="dashboard">
+          <div class="logo-icon">⚽</div>
+          <div class="logo-text">
+            <h1>Chico <span>B.E.T</span></h1>
+            <span class="logo-tag">IFBA EUNÁPOLIS • ADS</span>
+          </div>
+        </a>
+
+        <nav>
+          <ul class="nav-menu">
+            <li>
+              <button class="nav-link active" data-nav="dashboard">
+                <span>🏠</span> Início
+              </button>
+            </li>
+            <li>
+              <button class="nav-link" data-nav="elenco">
+                <span>🎴</span> Elenco & Cartas
+              </button>
+            </li>
+            <li>
+              <button class="nav-link" data-nav="sorteio-setup">
+                <span>⚖️</span> Sortear Baba
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Container Principal das Views (SPA) -->
+  <main class="app-container">
+
+    <!-- 1. TELA INICIAL (DASHBOARD) -->
+    <section id="view-dashboard" class="view-section active">
+      <div class="hero-card">
+        <h2 class="hero-title">Sorteio Justo & Resenha Garantida</h2>
+        <p class="hero-subtitle">
+          Plataforma esportiva interativa para equilibrar partidas de futebol amador com cartas personalizadas estilo FIFA Ultimate Team e algoritmo automático de divisão por Overall.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" data-nav="sorteio-setup">
+            <span>⚽</span> Configurar & Sortear Partida
+          </button>
+          <button class="btn btn-secondary btn-lg" data-nav="elenco">
+            <span>🎴</span> Ver Elenco & Cartas
+          </button>
+          <button class="btn btn-accent btn-lg" id="btn-novo-jogador-hero">
+            <span>➕</span> Cadastrar Atleta
+          </button>
+        </div>
+      </div>
+
+      <!-- Estatísticas Rápidas do Elenco -->
+      <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 14px;">📊 Panorama do Elenco</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-info">
+            <div class="stat-num" id="dash-count-total">0</div>
+            <div class="stat-label">Jogadores Cadastrados</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="color: var(--accent-gold); background: rgba(245, 158, 11, 0.1);">⭐</div>
+          <div class="stat-info">
+            <div class="stat-num" id="dash-count-media">0.0</div>
+            <div class="stat-label">Overall Médio Geral</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="color: var(--accent-red); background: rgba(239, 68, 68, 0.1);">🧤</div>
+          <div class="stat-info">
+            <div class="stat-num" id="dash-count-goleiros">0</div>
+            <div class="stat-label">Goleiros no Elenco</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="color: var(--accent-green); background: rgba(0, 230, 118, 0.1);">🎯</div>
+          <div class="stat-info">
+            <div class="stat-num" id="dash-count-atacantes">0</div>
+            <div class="stat-label">Artilheiros / Atacantes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Atalhos de Ação Rápida -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+        <button class="btn btn-outline btn-sm" id="btn-reset-factory" title="Restaura os jogadores iniciais da turma">
+          🔄 Restaurar Elenco Padrão IFBA
+        </button>
+        <span style="font-size: 0.8rem; color: var(--text-dim);">💾 Dados salvos automaticamente no navegador</span>
+      </div>
+    </section>
+
+    <!-- 2. TELA DE ELENCO E CARTAS -->
+    <section id="view-elenco" class="view-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-weight: 800;">Galeria de Cartas FUT</h2>
+          <p style="color: var(--text-muted); font-size: 0.92rem;">Visualize, busque e gerencie as cartas dos atletas do baba.</p>
+        </div>
+        <button class="btn btn-primary" id="btn-novo-jogador">
+          <span>➕</span> Novo Atleta
+        </button>
+      </div>
+
+      <!-- Barra de Filtros e Busca (RF01, Figura 3) -->
+      <div class="filters-bar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-player-input" placeholder="Buscar jogador por nome ou apelido...">
+        </div>
+
+        <div class="filter-chips">
+          <button class="chip-btn active" data-pos="TODOS">Todos</button>
+          <button class="chip-btn" data-pos="GOL">🧤 Goleiros</button>
+          <button class="chip-btn" data-pos="ZAG">🛡️ Zagueiros</button>
+          <button class="chip-btn" data-pos="MEI">⚡ Meio-Campo</button>
+          <button class="chip-btn" data-pos="ATA">🎯 Atacantes</button>
+        </div>
+      </div>
+
+      <!-- Grid com as Cartas FUT -->
+      <div class="cards-grid" id="cards-grid-container">
+        <!-- Renderizado dinamicamente via cartas.js -->
+      </div>
+    </section>
+
+    <!-- 3. TELA DE SETUP E SORTEIO (RF03, Figura 4) -->
+    <section id="view-sorteio-setup" class="view-section">
+      <div class="setup-container">
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 1.8rem; font-weight: 800;">Setup do Sorteio</h2>
+          <p style="color: var(--text-muted); font-size: 0.92rem;">Marque os jogadores presentes no baba e ajuste a formação das equipes.</p>
+        </div>
+
+        <!-- Seletor de Atletas por Equipe -->
+        <div class="team-size-picker">
+          <div>
+            <div style="font-weight: 700; font-size: 1rem; margin-bottom: 4px;">Atletas por Equipe:</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Tamanho ideal para futebol society, futsal ou campo</div>
+          </div>
+          <div class="team-size-options">
+            <button class="size-pill" data-size="4">4</button>
+            <button class="size-pill" data-size="5">5</button>
+            <button class="size-pill active" data-size="6">6</button>
+            <button class="size-pill" data-size="7">7</button>
+            <button class="size-pill" data-size="8">8</button>
+          </div>
+        </div>
+
+        <!-- Toolbar de Seleção Rápida -->
+        <div class="setup-toolbar">
+          <div class="setup-stats">
+            <span>Confirmados:</span>
+            <strong id="count-confirmados">0</strong>
+            <span style="margin-left: 8px;" id="count-previsao-times"></span>
+          </div>
+          <div class="setup-actions-fast">
+            <button class="btn btn-secondary btn-sm" id="btn-selecionar-todos">Marcar Todos</button>
+            <button class="btn btn-outline btn-sm" id="btn-desmarcar-todos">Desmarcar Todos</button>
+          </div>
+        </div>
+
+        <!-- Lista com Checkboxes de Presença -->
+        <div class="attendance-list" id="attendance-list-container">
+          <!-- Renderizado dinamicamente via sorteio.js -->
+        </div>
+
+        <!-- Botão Principal de Sorteio -->
+        <div style="margin-top: 24px;">
+          <button class="btn btn-primary btn-lg btn-block" id="btn-executar-sorteio" style="font-size: 1.15rem; padding: 16px;">
+            <span>🎲</span> SORTEAR TIMES EQUILIBRADOS
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. TELA DE RESULTADOS (RF03, RNF02, Figura 5) -->
+    <section id="view-sorteio-resultado" class="view-section">
+      <div class="results-container">
+        <!-- Banner de Equilíbrio e Métricas -->
+        <div class="results-header-banner">
+          <div class="balance-status">
+            <div class="balance-status-icon">🏆</div>
+            <div class="balance-status-text" id="balance-summary-text">
+              <h4>Equilíbrio Garantido</h4>
+              <p>Times divididos de forma justa alocando goleiros proporcionalmente.</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-secondary btn-sm" data-nav="sorteio-setup">
+              <span>⚙️</span> Ajustar Presença
+            </button>
+            <button class="btn btn-accent btn-sm" id="btn-refazer-sorteio">
+              <span>🔄</span> Sortear Novamente
+            </button>
+          </div>
+        </div>
+
+        <!-- Campinho Tático 2D Ilustrativo -->
+        <div class="field-view" id="tactical-field-preview">
+          <!-- Renderizado dinamicamente via sorteio.js -->
+        </div>
+
+        <!-- Grid de Times Formados -->
+        <div class="teams-grid" id="teams-grid-container">
+          <!-- Renderizado dinamicamente via sorteio.js -->
+        </div>
+
+        <!-- Ações no Rodapé dos Resultados -->
+        <div class="results-actions-footer">
+          <button class="btn btn-primary btn-lg" id="btn-compartilhar-whatsapp">
+            <span>📱</span> Compartilhar Escalação no WhatsApp
+          </button>
+          <button class="btn btn-secondary btn-lg" data-nav="elenco">
+            <span>🎴</span> Ver Cartas do Elenco
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL DE CADASTRO E EDIÇÃO DE JOGADOR (RF01, RF02) -->
+  <div class="modal-overlay" id="player-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-title">Cadastrar Novo Atleta</h3>
+        <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+      </div>
+
+      <form id="player-form">
+        <!-- Preview da Foto e Upload -->
+        <div class="photo-uploader">
+          <img src="" alt="Preview" class="photo-preview" id="player-photo-preview">
+          <div class="photo-controls">
+            <label class="form-label" style="margin-bottom: 2px;">Foto do Atleta:</label>
+            <input type="file" id="player-photo-input" accept="image/*" class="form-control" style="font-size: 0.8rem; padding: 6px;">
+            <span style="font-size: 0.72rem; color: var(--text-dim);">Dica: você pode subir uma foto ou deixar que o sistema gere um avatar com suas iniciais.</span>
+          </div>
+        </div>
+
+        <!-- Dados Básicos -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="player-nome">Nome Completo *</label>
+            <input type="text" id="player-nome" class="form-control" placeholder="Ex: Victor Hugo" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="player-apelido">Apelido na Pelada</label>
+            <input type="text" id="player-apelido" class="form-control" placeholder="Ex: Camisa 10">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="player-posicao">Posição Principal</label>
+            <select id="player-posicao" class="form-control">
+              <option value="GOL">🧤 Goleiro (GOL)</option>
+              <option value="ZAG">🛡️ Zagueiro / Defensor (ZAG)</option>
+              <option value="MEI" selected>⚡ Meio-Campo (MEI)</option>
+              <option value="ATA">🎯 Atacante (ATA)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="player-perna">Perna Dominante</label>
+            <select id="player-perna" class="form-control">
+              <option value="Destro">Destro</option>
+              <option value="Canhoto">Canhoto</option>
+              <option value="Ambidestro">Ambidestro</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Parametrização de Atributos com Sliders (RF02) -->
+        <div class="attributes-section">
+          <div class="attributes-header">
+            <div>
+              <span style="font-weight: 700; font-size: 0.95rem;">Atributos Técnicos (1 a 10)</span>
+              <div style="font-size: 0.75rem; color: var(--text-dim);">Ponderado automaticamente pela posição</div>
+            </div>
+            <div class="overall-preview-box">
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">OVERALL:</span>
+              <span class="overall-preview-num" id="modal-overall-preview">7.5</span>
+            </div>
+          </div>
+
+          <div class="attr-slider-row">
+            <span class="attr-name">⚡ Velocidade</span>
+            <input type="range" min="1" max="10" step="0.5" value="7" class="attr-slider" id="attr-vel">
+            <span class="attr-val" id="val-vel">7.0</span>
+          </div>
+
+          <div class="attr-slider-row">
+            <span class="attr-name">🎯 Chute</span>
+            <input type="range" min="1" max="10" step="0.5" value="7" class="attr-slider" id="attr-chu">
+            <span class="attr-val" id="val-chu">7.0</span>
+          </div>
+
+          <div class="attr-slider-row">
+            <span class="attr-name">👟 Passe</span>
+            <input type="range" min="1" max="10" step="0.5" value="7" class="attr-slider" id="attr-pas">
+            <span class="attr-val" id="val-pas">7.0</span>
+          </div>
+
+          <div class="attr-slider-row">
+            <span class="attr-name">🛡️ Defesa</span>
+            <input type="range" min="1" max="10" step="0.5" value="7" class="attr-slider" id="attr-def">
+            <span class="attr-val" id="val-def">7.0</span>
+          </div>
+
+          <div class="attr-slider-row">
+            <span class="attr-name">💪 Físico</span>
+            <input type="range" min="1" max="10" step="0.5" value="7" class="attr-slider" id="attr-fis">
+            <span class="attr-val" id="val-fis">7.0</span>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn btn-secondary" id="btn-cancelar-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="btn-salvar-modal">
+            <span>💾</span> Salvar Atleta
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer com Identificação Acadêmica -->
+  <footer class="app-footer">
+    <div class="app-container">
+      <div class="footer-content">
+        <div>
+          <span class="footer-badge">Chico B.E.T</span> • Projeto de Programação Web — Etapa 2
+        </div>
+        <div class="footer-creators">
+          <strong>Instituto Federal da Bahia (IFBA) campus Eunápolis</strong> | ADS — 4º Semestre<br>
+          Docente: Ana Cristina Linhares | Equipe: Victor Hugo, Paulo Amaral, Kauan Bento, Francisco António e Yan Lacerda.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts Modulares JS -->
+  <script src="js/dados.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/navegacao.js"></script>
+  <script src="js/cartas.js"></script>
+  <script src="js/cadastro.js"></script>
+  <script src="js/sorteio.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
