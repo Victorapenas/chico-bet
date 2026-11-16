@@ -1,0 +1,485 @@
+<?php
+/**
+ * index.php — Ponto de Entrada PHP do Chico B.E.T
+ * IFBA Campus Eunápolis (ADS - 4º Semestre)
+ *
+ * Funciona no XAMPP (Apache) ou servidor embutido: php -S localhost:8000
+ */
+
+$dataFile = __DIR__ . '/data/jogadores.json';
+$jogadoresIniciais = [];
+if (file_exists($dataFile)) {
+    $conteudo = file_get_contents($dataFile);
+    $jogadoresIniciais = json_decode($conteudo, true) ?: [];
+}
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chico B.E.T — O Baba da Quadra do IFBA Eunápolis (PHP)</title>
+
+  <!-- Tipografia: Inter (UI) e Rajdhani (display / números FIFA) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- CSS Modular -->
+  <link rel="stylesheet" href="css/variaveis.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/componentes.css">
+  <link rel="stylesheet" href="css/cartas-fut.css">
+  <link rel="stylesheet" href="css/sorteio.css">
+  <link rel="stylesheet" href="css/responsivo.css">
+  <script>
+    // Injeção de dados sincronizados diretamente pelo PHP
+    window.ELENCO_PHP = <?php echo json_encode($jogadoresIniciais, JSON_UNESCAPED_UNICODE); ?>;
+    window.BACKEND_PHP_ATIVO = true;
+  </script>
+</head>
+<body>
+
+  <!-- Header / Barra Superior (estilo FUTBIN) -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="javascript:void(0)" class="logo" data-tela="inicio">
+          <div class="logo-badge">CB</div>
+          <div>
+            <div class="logo-name">CHICO <span>B.E.T</span></div>
+            <div class="logo-sub">IFBA CAMPUS EUNÁPOLIS &bull; PHP BACKEND</div>
+          </div>
+        </a>
+
+        <nav>
+          <ul class="main-nav">
+            <li><button class="nav-btn active" data-tela="inicio">Início</button></li>
+            <li><button class="nav-btn" data-tela="elenco">Elenco &amp; Cartas</button></li>
+            <li><button class="nav-btn" data-tela="setup">Sortear Baba</button></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal SPA -->
+  <main class="container">
+
+    <!-- 1. TELA INICIAL (DASHBOARD) -->
+    <section id="v-inicio" class="view active">
+      <div class="hero">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom: 6px;">
+          <span style="font-size: 0.75rem; font-weight: 700; color: var(--gold); letter-spacing: 1px; text-transform: uppercase;">
+            Plataforma de Sorteio Esportivo &bull; IFBA Eunápolis
+          </span>
+          <span style="background:rgba(78, 140, 255, 0.15); border:1px solid #4e8cff; color:#93c5fd; font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:4px;">
+            PHP 8.2 + JSON Backend
+          </span>
+        </div>
+        <h2>Gestão de Elenco &amp; Sorteio Balanceado de Equipes</h2>
+        <p>
+          Sistema para organização de partidas amadoras na quadra poliesportiva do IFBA Eunápolis.
+          Forma equipes equilibradas por OVR, respeita posições principais e secundárias, oferece três modos de goleiro e gera rodízio automático de times.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" data-tela="setup">Configurar &amp; Sortear Baba</button>
+          <button class="btn btn-secondary btn-lg" data-tela="elenco">Ver Cartas do Elenco</button>
+          <button class="btn btn-ghost btn-lg" id="btn-novo-jogador-hero">Cadastrar Atleta</button>
+        </div>
+      </div>
+
+      <!-- Informação da Quadra do IFBA -->
+      <div class="info-bar">
+        <strong>Regra da Quadra:</strong> Equipes configuráveis (3, 4, 5 times), limite de 24 atletas titulares em quadra. Excedente distribuído como reservas dos times ou fila de espera.
+      </div>
+
+      <!-- Métricas do Elenco -->
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-value" id="dash-total">0</div>
+          <div class="stat-label">Atletas Cadastrados</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="dash-media" style="color: var(--gold);">0</div>
+          <div class="stat-label">Média Geral de Overall (OVR)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="dash-goleiros" style="color: var(--red);">0</div>
+          <div class="stat-label">Goleiros no Elenco</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="dash-linha" style="color: var(--green);">0</div>
+          <div class="stat-label">Jogadores de Linha</div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; flex-wrap: wrap; gap: 10px;">
+        <button class="btn btn-ghost btn-sm" id="btn-reset-elenco">Restaurar Elenco Oficial do IFBA</button>
+        <span style="font-size: 0.78rem; color: var(--text-dark);">Persistência via PHP Backend (data/jogadores.json)</span>
+      </div>
+    </section>
+
+    <!-- 2. TELA DE ELENCO & CARTAS -->
+    <section id="v-elenco" class="view">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
+        <div>
+          <h2 style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 800;">Catálogo de Cartas FUT</h2>
+          <p style="color: var(--text-gray); font-size: 0.88rem;">Visualização no padrão EA Sports FC com atributos técnicos, nacionalidade e cidade de origem.</p>
+        </div>
+        <button class="btn btn-primary" id="btn-novo-jogador">Cadastrar Atleta</button>
+      </div>
+
+      <!-- Barra de Filtros e Busca -->
+      <div class="toolbar">
+        <div class="search-field">
+          <input type="text" id="busca-jogador" placeholder="Buscar atleta por nome ou apelido...">
+        </div>
+
+        <div class="filter-row">
+          <button class="filter-pill active" data-pos="TODOS">Todos</button>
+          <button class="filter-pill" data-pos="MENSALISTA">Mensalistas</button>
+          <button class="filter-pill" data-pos="CONVIDADO">Convidados</button>
+          <button class="filter-pill" data-pos="GOL">Goleiros (GOL)</button>
+          <button class="filter-pill" data-pos="ZAG">Zagueiros (ZAG)</button>
+          <button class="filter-pill" data-pos="ALA">Alas (ALA)</button>
+          <button class="filter-pill" data-pos="MEI">Meio-Campo (MEI)</button>
+          <button class="filter-pill" data-pos="ATA">Atacantes (ATA)</button>
+        </div>
+      </div>
+
+      <!-- Grade de Cartas -->
+      <div class="cards-grid" id="grid-cartas">
+        <!-- Renderizado dinamicamente via cartas.js -->
+      </div>
+    </section>
+
+    <!-- 3. TELA DE SETUP E SORTEIO -->
+    <section id="v-setup" class="view">
+      <div class="setup-wrap">
+        <div style="margin-bottom: 18px;">
+          <h2 style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 800;">Setup da Partida</h2>
+          <p style="color: var(--text-gray); font-size: 0.88rem;">Configure a quantidade de times, modo de goleiro e presença dos atletas.</p>
+        </div>
+
+        <!-- Painel de Configurações do Sorteio -->
+        <div class="info-bar" style="background:var(--bg-card); border-left:4px solid var(--gold); padding:16px; margin-bottom:18px;">
+          <div style="font-weight:700; font-size:0.95rem; color:var(--text-white); margin-bottom:12px;">
+            ⚙️ Regras do Sorteio (Módulo Chico B.E.T)
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px;">
+            <!-- Quantidade de Times -->
+            <div>
+              <label class="form-label" for="cfg-num-times">Quantidade de Times:</label>
+              <select id="cfg-num-times" class="form-input">
+                <option value="2">2 Times</option>
+                <option value="3">3 Times</option>
+                <option value="4" selected>4 Times (Padrão 24)</option>
+                <option value="5">5 Times</option>
+                <option value="6">6 Times</option>
+              </select>
+            </div>
+
+            <!-- Tamanho do Time -->
+            <div>
+              <label class="form-label" for="cfg-tamanho-time">Atletas por Time em Quadra:</label>
+              <select id="cfg-tamanho-time" class="form-input">
+                <option value="5">5 Atletas (1 Gol + 4 Linha)</option>
+                <option value="6" selected>6 Atletas (1 Gol + 5 Linha - IFBA)</option>
+                <option value="7">7 Atletas (FUT 7)</option>
+              </select>
+            </div>
+
+            <!-- Modo de Goleiro -->
+            <div>
+              <label class="form-label" for="cfg-modo-goleiro">Modo de Goleiro:</label>
+              <select id="cfg-modo-goleiro" class="form-input">
+                <option value="com" selected>Com Goleiro (Goleiro natural do elenco)</option>
+                <option value="sem-rodizio">Sem Goleiro: Rodízio entre os jogadores do time</option>
+                <option value="sem-externo">Sem Goleiro: Alguém de fora agarra</option>
+              </select>
+            </div>
+
+            <!-- Tratamento de Excedente -->
+            <div>
+              <label class="form-label" for="cfg-excedente">Jogadores Excedentes:</label>
+              <select id="cfg-excedente" class="form-input">
+                <option value="reservas" selected>Reservas dos Times (Todos jogam no revezamento)</option>
+                <option value="fila">Fila de Espera (Prioridade histórico)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Goleiros de Fora (se modo for sem-externo ou fallback) -->
+          <div id="box-goleiros-fora" style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border);">
+            <label class="form-label">Goleiros de Fora Convidados (opcional):</label>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="input-gk-fora-nome" class="form-input" placeholder="Nome do goleiro de fora...">
+              <input type="number" id="input-gk-fora-ovr" class="form-input" style="width:100px;" placeholder="OVR" value="70" min="40" max="99">
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-add-gk-fora">+ Adicionar</button>
+            </div>
+            <div id="lista-gks-fora-tags" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;"></div>
+          </div>
+        </div>
+
+        <div class="quick-bar">
+          <div class="quick-count">
+            <span>Confirmados: </span>
+            <span class="count" id="count-presentes">0</span>
+            <span id="count-previsao" style="font-size: 0.82rem; color: var(--text-gray); margin-left: 10px;"></span>
+          </div>
+          <div class="quick-actions">
+            <button class="btn btn-secondary btn-sm" id="btn-marcar-todos">Marcar Todos</button>
+            <button class="btn btn-ghost btn-sm" id="btn-desmarcar-todos">Desmarcar Todos</button>
+          </div>
+        </div>
+
+        <!-- Lista de Presença -->
+        <div class="check-list" id="lista-presenca">
+          <!-- Renderizado dinamicamente -->
+        </div>
+
+        <div style="margin-top: 18px;">
+          <button class="btn btn-primary btn-lg btn-block" id="btn-executar-sorteio">
+            SORTEAR EQUIPES EQUILIBRADAS
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. TELA DE RESULTADOS & CAMPO TÁTICO ESTILO 7A0 -->
+    <section id="v-resultado" class="view">
+      <div class="results-wrap">
+        <div class="result-bar">
+          <div>
+            <h2 style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 800;">Resultado do Sorteio</h2>
+            <div id="balance-status-text" style="font-size: 0.88rem; color: var(--text-gray); margin-top: 2px;"></div>
+          </div>
+          <div class="result-bar-actions">
+            <button class="btn btn-secondary btn-sm" data-tela="setup">Ajustar Configuração</button>
+            <button class="btn btn-primary btn-sm" id="btn-refazer-sorteio">Sortear Novamente</button>
+          </div>
+        </div>
+
+        <!-- Box de Avisos do Sorteio -->
+        <div id="avisos-sorteio-wrap" style="margin-bottom:16px;"></div>
+
+        <!-- Abas para alternar o time visível no campo -->
+        <div class="field-tabs" id="field-tabs-wrap">
+          <!-- Preenchido dinamicamente via sorteio-ui.js -->
+        </div>
+
+        <!-- CAMPO TÁTICO ESTILO 7A0 (7a0.com.br) -->
+        <div class="pitch-wrap">
+          <div class="pitch">
+            <div class="pitch-midline"></div>
+            <div class="pitch-circle"></div>
+            <div class="pitch-spot"></div>
+            <div class="pitch-area-top"></div>
+            <div class="pitch-area-bot"></div>
+            <div class="pitch-small-bot"></div>
+
+            <!-- Slots dos atletas posicionados no campo -->
+            <div id="pitch-slots"></div>
+          </div>
+        </div>
+
+        <!-- Resumo dos Times em Cards (Titulares + Reservas) -->
+        <h4 style="font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; margin-bottom: 12px;">Escalação das Equipes</h4>
+        <div class="teams-grid" id="teams-grid-wrap">
+          <!-- Preenchido dinamicamente -->
+        </div>
+
+        <!-- Fila de Espera (se houver) -->
+        <div id="fila-espera-wrap" style="margin-bottom:20px; display:none;"></div>
+
+        <!-- Rodízio de Partidas do Baba -->
+        <div class="bench-section" id="partidas-rodizio-wrap" style="margin-bottom:20px;">
+          <div class="bench-head">
+            <h4>Cronograma de Partidas &bull; Rodízio de Times Inteiros</h4>
+            <span style="font-size:0.8rem; color:var(--text-gray);">Descanso automático após cada partida</span>
+          </div>
+          <div id="grid-partidas-geradas" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:10px;"></div>
+        </div>
+
+        <!-- Ações do Rodapé -->
+        <div class="result-footer" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+          <button class="btn btn-primary btn-lg" id="btn-whats">Compartilhar Escalação no WhatsApp</button>
+          <button class="btn btn-secondary btn-lg" id="btn-fechar-baba" style="background:#0f766e; border-color:#14b8a6; color:#fff;">
+            Encerrar Baba &amp; Salvar Histórico
+          </button>
+          <button class="btn btn-ghost btn-lg" data-tela="elenco">Ver Todas as Cartas</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL DE CADASTRO E EDIÇÃO DE ATLETA -->
+  <div class="modal-bg" id="modal-cadastro">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h3 id="modal-titulo">Cadastrar Atleta</h3>
+        <button class="modal-close" id="modal-fechar">&times;</button>
+      </div>
+
+      <form id="form-jogador">
+        <!-- Foto / Upload -->
+        <div class="photo-upload-area">
+          <img src="" alt="Foto" class="photo-thumb" id="photo-preview">
+          <div style="flex: 1;">
+            <label class="form-label">Foto do Atleta:</label>
+            <input type="file" id="player-photo" accept="image/*" class="form-input" style="padding: 4px;">
+            <span style="font-size: 0.72rem; color: var(--text-dark);">Se não possuir foto, o sistema aplicará um placeholder neutro com as iniciais.</span>
+          </div>
+        </div>
+
+        <!-- Dados Básicos -->
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="player-name-in">Nome Completo *</label>
+            <input type="text" id="player-name-in" class="form-input" placeholder="Ex: Victor Hugo" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="player-nick-in">Apelido na Quadra</label>
+            <input type="text" id="player-nick-in" class="form-input" placeholder="Ex: Victor">
+          </div>
+        </div>
+
+        <!-- Posições Principal e Secundária -->
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="player-pos">Posição Principal *</label>
+            <select id="player-pos" class="form-input">
+              <option value="GOL">Goleiro (GOL)</option>
+              <option value="ZAG">Zagueiro (ZAG)</option>
+              <option value="ALA">Ala / Lateral (ALA)</option>
+              <option value="MEI" selected>Meio-Campo (MEI)</option>
+              <option value="ATA">Atacante (ATA)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="player-pos-sec">Posição Secundária (Opcional)</label>
+            <select id="player-pos-sec" class="form-input">
+              <option value="">Nenhuma / Apenas Principal</option>
+              <option value="GOL">Goleiro (GOL)</option>
+              <option value="ZAG">Zagueiro (ZAG)</option>
+              <option value="ALA">Ala / Lateral (ALA)</option>
+              <option value="MEI">Meio-Campo (MEI)</option>
+              <option value="ATA">Atacante (ATA)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="player-perna-in">Perna Dominante</label>
+            <select id="player-perna-in" class="form-input">
+              <option value="R">Destro (R)</option>
+              <option value="L">Canhoto (L)</option>
+              <option value="LR">Ambidestro (LR)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="player-cat-in">Status no Baba</label>
+            <select id="player-cat-in" class="form-input">
+              <option value="mensalista" selected>Mensalista (Prioridade)</option>
+              <option value="convidado">Convidado / Diarista</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Cidade de Origem e País -->
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="player-origem-in">Cidade Natal / Origem</label>
+            <input type="text" id="player-origem-in" class="form-input" placeholder="Ex: Porto Seguro, Eunápolis, Luanda...">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="player-pais-in">País / Nacionalidade</label>
+            <select id="player-pais-in" class="form-input">
+              <option value="BR" selected>Brasil (BR)</option>
+              <option value="AO">Angola (AO)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Atributos Oficiais EA Sports FC (Escala 1 a 99) -->
+        <div class="attrs-panel">
+          <div class="attrs-title">
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-white); text-transform: uppercase;">
+              Atributos Oficiais PT-BR (1 a 99)
+            </span>
+            <span class="ovr-live">
+              OVR: <span id="modal-ovr-live">70</span>
+            </span>
+          </div>
+
+          <div class="attr-row">
+            <span class="attr-label">RIT (Ritmo)</span>
+            <input type="range" min="30" max="99" value="70" class="attr-slider" id="attr-rit">
+            <span class="attr-value" id="val-rit">70</span>
+          </div>
+          <div class="attr-row">
+            <span class="attr-label">FIN (Chute)</span>
+            <input type="range" min="30" max="99" value="70" class="attr-slider" id="attr-fin">
+            <span class="attr-value" id="val-fin">70</span>
+          </div>
+          <div class="attr-row">
+            <span class="attr-label">PAS (Passe)</span>
+            <input type="range" min="30" max="99" value="70" class="attr-slider" id="attr-pas">
+            <span class="attr-value" id="val-pas">70</span>
+          </div>
+          <div class="attr-row">
+            <span class="attr-label">DRI (Drible)</span>
+            <input type="range" min="30" max="99" value="70" class="attr-slider" id="attr-dri">
+            <span class="attr-value" id="val-dri">70</span>
+          </div>
+          <div class="attr-row">
+            <span class="attr-label">DEF (Defesa)</span>
+            <input type="range" min="30" max="99" value="70" class="attr-slider" id="attr-def">
+            <span class="attr-value" id="val-def">70</span>
+          </div>
+          <div class="attr-row">
+            <span class="attr-label">FIS (Físico)</span>
+            <input type="range" min="30" max="99" value="70" class="attr-slider" id="attr-fis">
+            <span class="attr-value" id="val-fis">70</span>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+          <button type="button" class="btn btn-secondary" id="btn-cancelar-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Atleta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast de Notificação -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Footer Acadêmico -->
+  <footer class="site-footer">
+    <div class="container">
+      <div style="margin-bottom: 4px;">
+        <span class="footer-brand">Chico B.E.T</span> &bull; Projeto de Programação Web — Etapa 2
+      </div>
+      <div>
+        <strong>Instituto Federal da Bahia (IFBA) campus Eunápolis</strong> | ADS — 4º Semestre<br>
+        Docente: Ana Cristina Linhares | Discentes: Victor Hugo, Paulo Amaral, Kauan Bento, Francisco António e Yan Lacerda.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts Modulares -->
+  <script src="js/utils.js"></script>
+  <script src="js/dados.js"></script>
+  <script src="js/navegacao.js"></script>
+  <script src="js/cartas.js"></script>
+  <script src="js/cadastro.js"></script>
+  <script src="sorteio.js"></script>
+  <script src="js/sorteio-ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -91,7 +91,7 @@ function montarCartaHTML(j) {
     '</div>' +
     '<div class="card-rating">' +
       '<div class="card-ovr">' + j.ovr + '</div>' +
-      '<div class="card-pos">' + j.posicao + '</div>' +
+      '<div class="card-pos">' + j.posicao + (j.posicaoSecundaria ? '<span style="font-size:0.55rem; opacity:0.85; display:block; letter-spacing:0.5px;">/' + j.posicaoSecundaria + '</span>' : '') + '</div>' +
     '</div>' +
     '<div class="card-photo' + (temFoto ? '' : ' no-photo') + '"' +
       (temFoto ? '' : ' data-initials="' + iniciais(j.nome) + '"') + '>' +

@@ -54,12 +54,15 @@ function htmlEscudoTime(nomeTime) {
   return '<span class="card-club-badge" title="' + (nomeTime || 'IFBA') + '">IFBA</span>';
 }
 
-// 5. Carregar jogadores do LocalStorage
+// 5. Carregar jogadores do LocalStorage ou PHP Backend
 function carregarJogadores() {
   var json = localStorage.getItem(CHAVE_DADOS);
   if (!json) {
-    guardarJogadores(ELENCO_PADRAO);
-    return ELENCO_PADRAO.slice();
+    var base = (typeof window !== "undefined" && window.ELENCO_PHP && window.ELENCO_PHP.length > 0)
+      ? window.ELENCO_PHP
+      : ELENCO_PADRAO;
+    guardarJogadores(base);
+    return base.slice();
   }
   try {
     return JSON.parse(json);
@@ -68,9 +71,28 @@ function carregarJogadores() {
   }
 }
 
-// 6. Salvar jogadores no LocalStorage
+// 6. Salvar jogadores no LocalStorage com sincronização PHP opcional
 function guardarJogadores(lista) {
-  localStorage.setItem(CHAVE_DADOS, JSON.stringify(lista));
+  try {
+    localStorage.setItem(CHAVE_DADOS, JSON.stringify(lista));
+  } catch (err) {
+    console.warn("Aviso ao salvar LocalStorage:", err);
+  }
+
+  // Se o backend PHP estiver disponível, sincroniza via API REST
+  if (typeof window !== "undefined" && (window.BACKEND_PHP_ATIVO || window.location.protocol.startsWith("http"))) {
+    try {
+      fetch("api/jogadores.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(lista)
+      }).catch(function() {
+        // Ignora silenciosamente em ambientes estáticos (ex: GitHub Pages / Vercel estático)
+      });
+    } catch (e) {
+      // Ignora silenciosamente
+    }
+  }
 }
 
 // 7. Retorna foto ou placeholder

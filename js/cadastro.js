@@ -90,6 +90,8 @@ function abrirModalNovo() {
 
   document.getElementById("modal-titulo").textContent = "Cadastrar Atleta";
   document.getElementById("form-jogador").reset();
+  var posSecInput = document.getElementById("player-pos-sec");
+  if (posSecInput) posSecInput.value = "";
   document.getElementById("photo-preview").src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23555b66'><circle cx='50' cy='35' r='20'/><path d='M18 85 C18 60 82 60 82 85 Z'/></svg>";
 
   var attrs = ["rit", "fin", "pas", "dri", "def", "fis"];
@@ -114,11 +116,17 @@ function editarJogador(id) {
   document.getElementById("player-name-in").value = j.nome;
   document.getElementById("player-nick-in").value = j.apelido || "";
   document.getElementById("player-pos").value = j.posicao;
+
+  var posSecInput = document.getElementById("player-pos-sec");
+  if (posSecInput) {
+    posSecInput.value = j.posicaoSecundaria || "";
+  }
+
   document.getElementById("player-perna-in").value = j.perna || "R";
   document.getElementById("player-origem-in").value = j.origem || "Eunápolis";
   document.getElementById("player-pais-in").value = j.bandeira || "BR";
   var catInput = document.getElementById("player-cat-in");
-  if (catInput) catInput.value = j.categoria || "mensalista";
+  if (catInput) catInput.value = j.categoria || j.status || "mensalista";
 
   if (j.foto) {
     document.getElementById("photo-preview").src = j.foto;
@@ -147,6 +155,9 @@ function salvarJogador() {
   var nome = document.getElementById("player-name-in").value.trim();
   var apelido = document.getElementById("player-nick-in").value.trim();
   var posicao = document.getElementById("player-pos").value;
+  var posSecEl = document.getElementById("player-pos-sec");
+  var posicaoSecundaria = (posSecEl && posSecEl.value && posSecEl.value !== posicao) ? posSecEl.value : null;
+
   var perna = document.getElementById("player-perna-in").value;
   var origem = document.getElementById("player-origem-in").value.trim() || "Eunápolis";
   var bandeira = document.getElementById("player-pais-in").value;
@@ -176,11 +187,13 @@ function salvarJogador() {
       lista[idx].nome = nome;
       lista[idx].apelido = apelido;
       lista[idx].posicao = posicao;
+      lista[idx].posicaoSecundaria = posicaoSecundaria;
       lista[idx].perna = perna;
       lista[idx].origem = origem;
       lista[idx].bandeira = bandeira;
       lista[idx].pais = pais;
       lista[idx].categoria = categoria;
+      lista[idx].status = categoria;
       lista[idx].stats = stats;
       lista[idx].ovr = ovr;
       if (fotoTempBase64 !== "") {
@@ -194,15 +207,19 @@ function salvarJogador() {
       nome: nome,
       apelido: apelido,
       posicao: posicao,
+      posicaoSecundaria: posicaoSecundaria,
       perna: perna,
       origem: origem,
       bandeira: bandeira,
       pais: pais,
       categoria: categoria,
+      status: categoria,
       time: "IFBA Eunápolis",
       foto: fotoTempBase64,
       stats: stats,
-      ovr: ovr
+      ovr: ovr,
+      vezesNoGol: 0,
+      jogosForaSeguidos: 0
     };
     lista.unshift(novo);
     notify("Atleta " + nome + " cadastrado no elenco.");

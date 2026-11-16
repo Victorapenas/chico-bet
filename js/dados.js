@@ -12,7 +12,7 @@
  *
  * Categorias:
  * - 'mensalista': Prioridade na titularidade e vaga no baba.
- * - 'convidado': Participa avulso e entra primeiro na fila de revezamento.
+ * - 'convidado': Participa avulso e entra no rodízio/revezamento.
  */
 
 var ELENCO_PADRAO = [
@@ -21,14 +21,18 @@ var ELENCO_PADRAO = [
     nome: "Victor Hugo",
     apelido: "Victor",
     posicao: "MEI",
+    posicaoSecundaria: "ALA",
     perna: "R",
     categoria: "mensalista",
+    status: "mensalista",
     origem: "Porto Seguro",
     pais: "Brasil",
     bandeira: "BR",
     time: "IFBA Eunápolis",
     foto: "fotos/foto_1.jpg",
     stats: { rit: 78, fin: 72, pas: 82, dri: 80, def: 64, fis: 70 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   },
   {
@@ -36,14 +40,18 @@ var ELENCO_PADRAO = [
     nome: "Paulo Amaral",
     apelido: "Capitão Paulo",
     posicao: "GOL",
+    posicaoSecundaria: null,
     perna: "R",
     categoria: "mensalista",
+    status: "mensalista",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
     time: "IFBA Eunápolis",
     foto: "fotos/foto_2.jpg",
     stats: { rit: 58, fin: 45, pas: 65, dri: 52, def: 84, fis: 80 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   },
   {
@@ -51,14 +59,18 @@ var ELENCO_PADRAO = [
     nome: "Kauan Bento",
     apelido: "Bento",
     posicao: "ATA",
+    posicaoSecundaria: "ALA",
     perna: "L",
     categoria: "mensalista",
+    status: "mensalista",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
     time: "IFBA Eunápolis",
     foto: "fotos/foto_3.jpg",
     stats: { rit: 84, fin: 82, pas: 68, dri: 79, def: 48, fis: 74 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   },
   {
@@ -66,14 +78,18 @@ var ELENCO_PADRAO = [
     nome: "Francisco António",
     apelido: "Chico",
     posicao: "ZAG",
+    posicaoSecundaria: "MEI",
     perna: "R",
     categoria: "mensalista",
+    status: "mensalista",
     origem: "Luanda",
     pais: "Angola",
     bandeira: "AO",
     time: "IFBA Eunápolis",
     foto: "fotos/foto_4.jpg",
     stats: { rit: 68, fin: 52, pas: 66, dri: 60, def: 83, fis: 85 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   },
   {
@@ -81,14 +97,18 @@ var ELENCO_PADRAO = [
     nome: "Yan Lacerda",
     apelido: "Yan",
     posicao: "ALA",
+    posicaoSecundaria: "MEI",
     perna: "LR",
     categoria: "mensalista",
+    status: "mensalista",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
     time: "IFBA Eunápolis",
     foto: "",
     stats: { rit: 76, fin: 65, pas: 74, dri: 77, def: 66, fis: 70 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   },
   {
@@ -96,14 +116,18 @@ var ELENCO_PADRAO = [
     nome: "Higor",
     apelido: "Higor",
     posicao: "MEI",
+    posicaoSecundaria: "ATA",
     perna: "R",
-    categoria: "mensalista", // Entrou sexta como mensalista
+    categoria: "mensalista",
+    status: "mensalista",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
     time: "IFBA Eunápolis",
     foto: "",
     stats: { rit: 75, fin: 70, pas: 78, dri: 76, def: 60, fis: 68 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   },
   {
@@ -111,14 +135,18 @@ var ELENCO_PADRAO = [
     nome: "Lucas",
     apelido: "Lucas",
     posicao: "ALA",
+    posicaoSecundaria: "MEI",
     perna: "L",
-    categoria: "mensalista", // Entrou sexta como mensalista
+    categoria: "mensalista",
+    status: "mensalista",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
     time: "IFBA Eunápolis",
     foto: "",
     stats: { rit: 80, fin: 68, pas: 72, dri: 74, def: 58, fis: 66 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   },
   {
@@ -126,14 +154,18 @@ var ELENCO_PADRAO = [
     nome: "Gabriel Oliveira",
     apelido: "Muralha",
     posicao: "GOL",
+    posicaoSecundaria: null,
     perna: "L",
     categoria: "mensalista",
+    status: "mensalista",
     origem: "Porto Seguro",
     pais: "Brasil",
     bandeira: "BR",
     time: "IFBA Eunápolis",
     foto: "",
     stats: { rit: 54, fin: 40, pas: 60, dri: 48, def: 82, fis: 78 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   },
   {
@@ -141,14 +173,18 @@ var ELENCO_PADRAO = [
     nome: "Lucas Santos",
     apelido: "Luquinhas",
     posicao: "ZAG",
+    posicaoSecundaria: "ALA",
     perna: "R",
     categoria: "convidado",
+    status: "convidado",
     origem: "Itabela",
     pais: "Brasil",
     bandeira: "BR",
     time: "IFBA Eunápolis",
     foto: "",
     stats: { rit: 65, fin: 50, pas: 64, dri: 58, def: 78, fis: 80 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   },
   {
@@ -156,14 +192,18 @@ var ELENCO_PADRAO = [
     nome: "Matheus Lima",
     apelido: "Theus",
     posicao: "ALA",
+    posicaoSecundaria: "ATA",
     perna: "R",
     categoria: "convidado",
+    status: "convidado",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
     time: "IFBA Eunápolis",
     foto: "",
     stats: { rit: 74, fin: 66, pas: 70, dri: 75, def: 60, fis: 68 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   },
   {
@@ -171,14 +211,18 @@ var ELENCO_PADRAO = [
     nome: "Felipe Souza",
     apelido: "Felipão",
     posicao: "MEI",
+    posicaoSecundaria: "ZAG",
     perna: "R",
     categoria: "convidado",
+    status: "convidado",
     origem: "Arraial d'Ajuda",
     pais: "Brasil",
     bandeira: "BR",
     time: "IFBA Eunápolis",
     foto: "",
     stats: { rit: 70, fin: 74, pas: 80, dri: 72, def: 62, fis: 66 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   },
   {
@@ -186,14 +230,18 @@ var ELENCO_PADRAO = [
     nome: "Bruno Costa",
     apelido: "Brunão",
     posicao: "ATA",
+    posicaoSecundaria: "MEI",
     perna: "R",
     categoria: "convidado",
+    status: "convidado",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
     time: "IFBA Eunápolis",
     foto: "",
     stats: { rit: 80, fin: 76, pas: 62, dri: 70, def: 46, fis: 78 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   },
   {
@@ -201,14 +249,18 @@ var ELENCO_PADRAO = [
     nome: "Rodrigo Lima",
     apelido: "Flecha",
     posicao: "ALA",
+    posicaoSecundaria: "ATA",
     perna: "L",
     categoria: "convidado",
+    status: "convidado",
     origem: "Trancoso",
     pais: "Brasil",
     bandeira: "BR",
     time: "IFBA Eunápolis",
     foto: "",
     stats: { rit: 82, fin: 64, pas: 60, dri: 74, def: 56, fis: 66 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   },
   {
@@ -216,14 +268,18 @@ var ELENCO_PADRAO = [
     nome: "Diego Rocha",
     apelido: "Xerifinho",
     posicao: "ZAG",
+    posicaoSecundaria: null,
     perna: "R",
     categoria: "convidado",
+    status: "convidado",
     origem: "Eunápolis",
     pais: "Brasil",
     bandeira: "BR",
     time: "IFBA Eunápolis",
     foto: "",
     stats: { rit: 60, fin: 48, pas: 62, dri: 54, def: 76, fis: 82 },
+    vezesNoGol: 0,
+    jogosForaSeguidos: 0,
     ovr: 0
   }
 ];
@@ -233,4 +289,4 @@ ELENCO_PADRAO.forEach(function(j) {
   j.ovr = calcularOVR(j.posicao, j.stats);
 });
 
-var CHAVE_DADOS = "chicobet_jogadores_v5";
+var CHAVE_DADOS = "chicobet_jogadores_v6";

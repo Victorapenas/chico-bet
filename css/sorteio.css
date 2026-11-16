@@ -476,3 +476,185 @@
   flex-wrap: wrap;
 }
 
+/* === Avisos Dinâmicos do Sorteio === */
+.avisos-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.aviso-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid var(--border);
+  color: var(--text-white);
+}
+
+.aviso-item.warn {
+  border-left: 4px solid var(--gold);
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.aviso-item.info {
+  border-left: 4px solid #3b82f6;
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.aviso-item.alert {
+  border-left: 4px solid var(--red);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.aviso-icone {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* === Encaixe de Posição no Campo 7a0 === */
+.encaixe-badge {
+  display: inline-block;
+  font-size: 0.58rem;
+  padding: 1px 4px;
+  border-radius: 2px;
+  margin-left: 3px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.encaixe-principal {
+  background: rgba(34, 197, 94, 0.25);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.5);
+}
+.encaixe-secundaria {
+  background: rgba(234, 179, 8, 0.25);
+  color: #fde047;
+  border: 1px solid rgba(234, 179, 8, 0.5);
+}
+.encaixe-fora {
+  background: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+}
+
+/* === Reservas de Cada Time === */
+.team-reservas-section {
+  border-top: 1px dashed var(--border);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px 14px;
+}
+.team-reservas-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+/* === Grade de Partidas do Rodízio === */
+.partida-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all var(--trans);
+}
+
+.partida-card:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.partida-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--text-gray);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 4px;
+}
+
+.partida-numero {
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--gold);
+  font-size: 0.85rem;
+}
+
+.partida-confronto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.partida-time-nome {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--text-white);
+}
+
+.partida-vs {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.partida-gk-info {
+  font-size: 0.72rem;
+  color: var(--text-gray);
+  background: rgba(0, 0, 0, 0.25);
+  padding: 4px 6px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.badge-seguidas {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* === Tags de Goleiro de Fora no Setup === */
+.gk-fora-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  color: #93c5fd;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.gk-fora-tag button {
+  background: none;
+  border: none;
+  color: #f87171;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 2px;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+
